@@ -25,6 +25,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
@@ -38,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.Company;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -46,6 +48,11 @@ import seedu.address.model.tag.Tag;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandParserTest {
+    private static final String COMPANY_DESC_AMY = " c/Amy Corp";
+    private static final String COMPANY_DESC_BOB = " c/Bob Industries";
+    private static final String INVALID_COMPANY_DESC = " c/Comp@ny!";
+    private static final String VALID_COMPANY_AMY = "Amy Corp";
+    private static final String VALID_COMPANY_BOB = "Bob Industries";
     private AddCommandParser parser = new AddCommandParser();
 
     @Test
@@ -192,5 +199,38 @@ public class AddCommandParserTest {
         assertParseFailure(parser, PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
                 + ADDRESS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_optionalCompanyPresent_success() {
+        Person expectedPerson = new PersonBuilder(AMY)
+                .withCompany(VALID_COMPANY_AMY)
+                .withTags()
+                .build();
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY + COMPANY_DESC_AMY, new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_optionalCompanyMissing_success() {
+        Person expectedPerson = new PersonBuilder(AMY)
+                .withCompany(null)
+                .withTags()
+                .build();
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY, new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_invalidCompany_failure() {
+        assertParseFailure(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY + INVALID_COMPANY_DESC, Company.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
+    public void parse_multipleCompanies_failure() {
+        assertParseFailure(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                        + ADDRESS_DESC_AMY + COMPANY_DESC_AMY + COMPANY_DESC_BOB,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_COMPANY));
     }
 }
