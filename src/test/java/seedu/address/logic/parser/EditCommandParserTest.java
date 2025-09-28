@@ -50,15 +50,13 @@ import seedu.address.testutil.EditPersonDescriptorBuilder;
 public class EditCommandParserTest {
 
     private static final String TAG_EMPTY = " " + PREFIX_TAG;
-
     private static final String MESSAGE_INVALID_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
-
-    private EditCommandParser parser = new EditCommandParser();
-
     private static final String COMPANY_DESC_AMY = " c/Amy Corp";
     private static final String COMPANY_DESC_BOB = " c/Bob Industries";
     private static final String INVALID_COMPANY_DESC = " c/@InvalidCompany";
+
+    private EditCommandParser parser = new EditCommandParser();
 
     @Test
     public void parse_missingParts_failure() {
