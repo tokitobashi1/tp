@@ -14,7 +14,7 @@ import seedu.address.testutil.PersonBuilder;
 
 public class NameContainsKeywordsPredicateTest {
 
-   @Test
+    @Test
     public void equals() {
         List<String> firstPredicateKeywordList = Collections.singletonList("first");
         List<String> secondPredicateKeywordList = Arrays.asList("first", "second");
@@ -83,11 +83,8 @@ public class NameContainsKeywordsPredicateTest {
 
         // OR across fields: one of the keywords matches one of the fields
         //predicate = new NameContainsKeywordsPredicate(Arrays.asList("Alice", "8743", "Tech"));
-        //assertTrue(predicate.test(new PersonBuilder()
-                //.withName("Alice")
-                //.withPhone("87438807")
-                //.withCompany("Tech Solutions")
-                //.build()));
+        //assertTrue(predicate.test(new PersonBuilder().withName("Alice").withPhone("87438807")
+        // .withCompany("Tech Solutions").build()));
     }
 
     @Test

@@ -75,16 +75,16 @@ public class FindCommandTest {
         assertEquals(Arrays.asList(CARL, ELLE, FIONA), model.getFilteredPersonList());
     }
 
-@Test
-public void execute_partialKeyword_matchesAcrossFields() {
-    NameContainsKeywordsPredicate predicate = preparePredicate("exa");
-    FindCommand command = new FindCommand(predicate);
-    expectedModel.updateFilteredPersonList(predicate);
-    String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW,
-            expectedModel.getFilteredPersonList().size());
-    assertCommandSuccess(command, model, expectedMessage, expectedModel);
-    assertEquals(expectedModel.getFilteredPersonList(), model.getFilteredPersonList());
-}
+    @Test
+    public void execute_partialKeyword_matchesAcrossFields() {
+        NameContainsKeywordsPredicate predicate = preparePredicate("exa");
+        FindCommand command = new FindCommand(predicate);
+        expectedModel.updateFilteredPersonList(predicate);
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW,
+                expectedModel.getFilteredPersonList().size());
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertEquals(expectedModel.getFilteredPersonList(), model.getFilteredPersonList());
+    }
 
     @Test
     public void toStringMethod() {
