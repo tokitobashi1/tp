@@ -13,6 +13,53 @@ import org.junit.jupiter.api.Test;
 import seedu.address.testutil.PersonBuilder;
 
 public class NameContainsKeywordsPredicateTest {
+    static class PersonWithCompany extends Person {
+        private final Object company;
+
+        PersonWithCompany(Person base, Object company) {
+            super(base.getName(), base.getPhone(), base.getEmail(), base.getAddress(), base.getTags());
+            this.company = company;
+        }
+
+        public Object getCompany() {
+            return company;
+        }
+    }
+
+    @Test
+    public void test_companyToStringContainsKeyword_returnsTrue() {
+        Person base = new PersonBuilder().withName("John Doe").build();
+        Object company = new Object() {
+            @Override
+            public String toString() {
+                return "Tech Solutions";
+            }
+        };
+        Person person = new PersonWithCompany(base, company);
+
+        NameContainsKeywordsPredicate predicate =
+                new NameContainsKeywordsPredicate(Collections.singletonList("Tech"));
+
+        assertTrue(predicate.test(person), "Should match company.toString() content");
+    }
+
+    @Test
+    public void test_companyToStringThrowsInvocationHandled_returnsFalse() {
+        Person base = new PersonBuilder().withName("John Doe").build();
+        Object badCompany = new Object() {
+            @Override
+            public String toString() {
+                throw new RuntimeException("boom");
+            }
+        };
+        Person person = new PersonWithCompany(base, badCompany);
+
+        NameContainsKeywordsPredicate predicate =
+                new NameContainsKeywordsPredicate(Collections.singletonList("Tech"));
+
+        assertFalse(predicate.test(person));
+    }
+
 
     @Test
     public void equals() {
