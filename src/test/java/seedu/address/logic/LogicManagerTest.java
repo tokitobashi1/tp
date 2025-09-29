@@ -13,6 +13,8 @@ import static seedu.address.testutil.TypicalPersons.AMY;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,7 @@ import seedu.address.storage.JsonAddressBookStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
 import seedu.address.storage.StorageManager;
 import seedu.address.testutil.PersonBuilder;
+
 
 public class LogicManagerTest {
     private static final IOException DUMMY_IO_EXCEPTION = new IOException("dummy IO exception");
@@ -67,8 +70,21 @@ public class LogicManagerTest {
     @Test
     public void execute_validCommand_success() throws Exception {
         String listCommand = ListCommand.COMMAND_WORD;
-        assertCommandSuccess(listCommand, ListCommand.MESSAGE_SUCCESS, model);
+
+        // Build expected message using the same formatting as ListCommand
+        List<Person> allContacts = model.getFilteredPersonList();
+        String expectedMessage;
+        if (allContacts.isEmpty()) {
+            expectedMessage = "No contacts stored";
+        } else {
+            expectedMessage = allContacts.stream()
+                    .map(person -> formatPerson(person, allContacts.indexOf(person) + 1))
+                    .collect(Collectors.joining("\n"));
+        }
+
+        assertCommandSuccess(listCommand, expectedMessage, model);
     }
+
 
     @Test
     public void execute_storageThrowsIoException_throwsCommandException() {
@@ -86,7 +102,17 @@ public class LogicManagerTest {
     public void getFilteredPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> logic.getFilteredPersonList().remove(0));
     }
-
+    private String formatPerson(Person person, int index) {
+        return index + ". "
+                + person.getName() + " "
+                + person.getPhone() + " "
+                + person.getEmail() + " "
+                + person.getAddress() + " "
+                + person.getCompany() + " "
+                + person.getTags().stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", "));
+    }
     /**
      * Executes the command and confirms that
      * - no exceptions are thrown <br>
