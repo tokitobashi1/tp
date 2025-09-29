@@ -13,15 +13,33 @@ import org.junit.jupiter.api.Test;
 import seedu.address.testutil.PersonBuilder;
 
 public class NameContainsKeywordsPredicateTest {
-    static class PersonWithCompany extends Person {
-        private final Object company;
+    class Company {
+        private final String name;
 
-        PersonWithCompany(Person base, Object company) {
+        Company(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    // Test helper: subclass Person to expose getCompany() for reflection without changing production code.
+    static class PersonWithCompany extends Person {
+        private final Company company;
+
+        PersonWithCompany(Person base, Company company) {
+            // Call the current Person constructor signature in this branch:
+            // Person(Name, Phone, Email, Address, Set<Tag>)
             super(base.getName(), base.getPhone(), base.getEmail(), base.getAddress(), base.getTags());
             this.company = company;
         }
 
-        public Object getCompany() {
+        // Do NOT use @Override — keep this test-only method so reflection finds "getCompany"
+        // whether or not production Person already declares it.
+        public Company getCompany() {
             return company;
         }
     }
@@ -29,7 +47,7 @@ public class NameContainsKeywordsPredicateTest {
     @Test
     public void test_companyToStringContainsKeyword_returnsTrue() {
         Person base = new PersonBuilder().withName("John Doe").build();
-        Object company = new Object() {
+        Company company = new Company("Tech Solutions") {
             @Override
             public String toString() {
                 return "Tech Solutions";
@@ -46,7 +64,7 @@ public class NameContainsKeywordsPredicateTest {
     @Test
     public void test_companyToStringThrowsInvocationHandled_returnsFalse() {
         Person base = new PersonBuilder().withName("John Doe").build();
-        Object badCompany = new Object() {
+        Company badCompany = new Company("Bad Co") {
             @Override
             public String toString() {
                 throw new RuntimeException("boom");
@@ -59,6 +77,7 @@ public class NameContainsKeywordsPredicateTest {
 
         assertFalse(predicate.test(person));
     }
+
 
 
     @Test
