@@ -51,9 +51,9 @@ public class EditCommand extends Command {
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
-    public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Contact: %1$s";
+    public static final String MESSAGE_NOT_EDITED = "Please provide at least one field to update";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This edit would create a duplicate contact";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -69,7 +69,13 @@ public class EditCommand extends Command {
         this.index = index;
         this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
     }
-
+    /**
+     * Executes the edit command: edits the contact at the given index with new details.
+     *
+     * @param model The model containing the address book and filtered contact list.
+     * @return A CommandResult with the updated contact on success.
+     * @throws CommandException If the index is invalid, no fields are provided, or the edit creates a duplicate.
+     */
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
@@ -80,10 +86,24 @@ public class EditCommand extends Command {
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
+
+        if (!editPersonDescriptor.isAnyFieldEdited()) {
+            throw new CommandException(MESSAGE_NOT_EDITED);
+        }
+
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
-        if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+
+        List<Person> allPersons = model.getAddressBook().getPersonList();
+        for (int i = 0; i < allPersons.size(); i++) {
+            if (i == index.getZeroBased()) {
+                continue;
+            }
+            Person p = allPersons.get(i);
+            if (p.getName().equals(editedPerson.getName())
+                    && p.getPhone().equals(editedPerson.getPhone())) {
+                throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+            }
         }
 
         model.setPerson(personToEdit, editedPerson);
@@ -91,21 +111,26 @@ public class EditCommand extends Command {
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
 
+    private static <T> T updated(Optional<T> newValue, T oldValue) {
+        return newValue.orElse(oldValue);
+    }
+
     /**
      * Creates and returns a {@code Person} with the details of {@code personToEdit}
      * edited with {@code editPersonDescriptor}.
      */
-    private static Person createEditedPerson(Person personToEdit, EditPersonDescriptor editPersonDescriptor) {
+    private static Person createEditedPerson(Person personToEdit,
+                                             EditPersonDescriptor editPersonDescriptor) {
         assert personToEdit != null;
 
-        Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
-        Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
-        Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
-        Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
-        Company updatedCompany = editPersonDescriptor.getCompany().orElse(personToEdit.getCompany());
-        Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
-
-        return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedCompany, updatedTags);
+        return new Person(
+                updated(editPersonDescriptor.getName(), personToEdit.getName()),
+                updated(editPersonDescriptor.getPhone(), personToEdit.getPhone()),
+                updated(editPersonDescriptor.getEmail(), personToEdit.getEmail()),
+                updated(editPersonDescriptor.getAddress(), personToEdit.getAddress()),
+                updated(editPersonDescriptor.getCompany(), personToEdit.getCompany()),
+                updated(editPersonDescriptor.getTags(), personToEdit.getTags())
+        );
     }
 
     @Override
@@ -113,15 +138,13 @@ public class EditCommand extends Command {
         if (other == this) {
             return true;
         }
-
-        // instanceof handles nulls
         if (!(other instanceof EditCommand)) {
             return false;
         }
 
         EditCommand otherEditCommand = (EditCommand) other;
-        return index.equals(otherEditCommand.index)
-                && editPersonDescriptor.equals(otherEditCommand.editPersonDescriptor);
+        return Objects.equals(index, otherEditCommand.index)
+                && Objects.equals(editPersonDescriptor, otherEditCommand.editPersonDescriptor);
     }
 
     @Override
@@ -229,7 +252,6 @@ public class EditCommand extends Command {
                 return true;
             }
 
-            // instanceof handles nulls
             if (!(other instanceof EditPersonDescriptor)) {
                 return false;
             }
