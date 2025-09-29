@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.SearchUtil;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.tag.Tag;
 
 /**
  * Tests that a {@code Person}'s fields contain any of the keywords given.
