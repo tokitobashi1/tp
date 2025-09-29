@@ -73,6 +73,27 @@ public class FindCommandTest {
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Arrays.asList(CARL, ELLE, FIONA), model.getFilteredPersonList());
     }
+    
+@Test
+public void execute_partialKeywords_multiplePersonsFound() {
+    String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 3);
+    NameContainsKeywordsPredicate predicate = preparePredicate("ur Elle");
+    FindCommand command = new FindCommand(predicate);
+    expectedModel.updateFilteredPersonList(predicate);
+    assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    assertEquals(Arrays.asList(CARL, ELLE, FIONA), model.getFilteredPersonList());
+}
+
+@Test
+public void execute_partialKeyword_matchesAcrossFields() {
+    NameContainsKeywordsPredicate predicate = preparePredicate("exa");
+    FindCommand command = new FindCommand(predicate);
+    expectedModel.updateFilteredPersonList(predicate);
+    String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW,
+            expectedModel.getFilteredPersonList().size());
+    assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    assertEquals(expectedModel.getFilteredPersonList(), model.getFilteredPersonList());
+}
 
     @Test
     public void toStringMethod() {
@@ -86,6 +107,18 @@ public class FindCommandTest {
      * Parses {@code userInput} into a {@code NameContainsKeywordsPredicate}.
      */
     private NameContainsKeywordsPredicate preparePredicate(String userInput) {
-        return new NameContainsKeywordsPredicate(Arrays.asList(userInput.split("\\s+")));
+        if (userInput == null) {
+            return new NameContainsKeywordsPredicate(Collections.emptyList());
+        }
+
+        String trimmed = userInput.trim();
+        if (trimmed.isEmpty()) {
+            return new NameContainsKeywordsPredicate(Collections.emptyList());
+        }
+
+        List<String> tokens = Arrays.stream(trimmed.split("\\s+"))
+                .filter(s -> !s.isBlank())
+                .collect(Collectors.toList());
+        return new NameContainsKeywordsPredicate(tokens);
     }
 }
