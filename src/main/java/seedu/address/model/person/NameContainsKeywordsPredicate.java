@@ -5,9 +5,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.SearchUtil;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.tag.Tag;
@@ -98,13 +96,14 @@ public class NameContainsKeywordsPredicate implements java.util.function.Predica
                     Method valueMethod = companyObj.getClass().getMethod("toString");
                     companyString = (String) valueMethod.invoke(companyObj);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-                    // ignore, companyString will remain null and be skipped
+                    System.out.println("");
                 }
                 if (companyString != null && SearchUtil.containsSubstringIgnoreCase(companyString, keyword)) {
                     return true;
                 }
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+            System.out.println("");
         }
 
         return false;
