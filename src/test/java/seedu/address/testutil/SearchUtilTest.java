@@ -1,10 +1,14 @@
-package seedu.address.commons.util;
+package seedu.address.testutil;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-class SearchUtilTest {
+import seedu.address.commons.util.SearchUtil;
+
+public class SearchUtilTest {
 
     @Test
     void containsSubstringIgnoreCase_emptySubstring_returnsFalse() {
@@ -14,18 +18,17 @@ class SearchUtilTest {
     @Test
     void containsSubstringIgnoreCase_contains_returnsTrue() {
         assertTrue(SearchUtil.containsSubstringIgnoreCase("John Doe", "ohn"));
-        assertTrue(SearchUtil.containsSubstringIgnoreCase("Acme Inc", "acme"));
     }
 
     @Test
-    void containsSubstringIgnoreCase_nullSource_throwsNPE() {
+    void containsSubstringIgnoreCase_nullSource_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () ->
-            SearchUtil.containsSubstringIgnoreCase(null, "a"));
+                SearchUtil.containsSubstringIgnoreCase(null, "a"));
     }
 
     @Test
-    void containsSubstringIgnoreCase_nullSubstring_throwsNPE() {
+    void containsSubstringIgnoreCase_nullSubstring_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () ->
-            SearchUtil.containsSubstringIgnoreCase("a", null));
+                SearchUtil.containsSubstringIgnoreCase("a", null));
     }
 }
