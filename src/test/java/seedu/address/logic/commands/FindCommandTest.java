@@ -12,6 +12,7 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -107,18 +108,11 @@ public void execute_partialKeyword_matchesAcrossFields() {
      * Parses {@code userInput} into a {@code NameContainsKeywordsPredicate}.
      */
     private NameContainsKeywordsPredicate preparePredicate(String userInput) {
-        if (userInput == null) {
-            return new NameContainsKeywordsPredicate(Collections.emptyList());
-        }
-
         String trimmed = userInput.trim();
         if (trimmed.isEmpty()) {
             return new NameContainsKeywordsPredicate(Collections.emptyList());
         }
-
-        List<String> tokens = Arrays.stream(trimmed.split("\\s+"))
-                .filter(s -> !s.isBlank())
-                .collect(Collectors.toList());
+        List<String> tokens = Arrays.asList(trimmed.split("\\s+"));
         return new NameContainsKeywordsPredicate(tokens);
     }
 }
