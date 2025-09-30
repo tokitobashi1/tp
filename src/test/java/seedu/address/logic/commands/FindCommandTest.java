@@ -12,6 +12,7 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -75,6 +76,17 @@ public class FindCommandTest {
     }
 
     @Test
+    public void execute_partialKeyword_matchesAcrossFields() {
+        NameContainsKeywordsPredicate predicate = preparePredicate("exa");
+        FindCommand command = new FindCommand(predicate);
+        expectedModel.updateFilteredPersonList(predicate);
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW,
+                expectedModel.getFilteredPersonList().size());
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertEquals(expectedModel.getFilteredPersonList(), model.getFilteredPersonList());
+    }
+
+    @Test
     public void toStringMethod() {
         NameContainsKeywordsPredicate predicate = new NameContainsKeywordsPredicate(Arrays.asList("keyword"));
         FindCommand findCommand = new FindCommand(predicate);
@@ -86,6 +98,11 @@ public class FindCommandTest {
      * Parses {@code userInput} into a {@code NameContainsKeywordsPredicate}.
      */
     private NameContainsKeywordsPredicate preparePredicate(String userInput) {
-        return new NameContainsKeywordsPredicate(Arrays.asList(userInput.split("\\s+")));
+        String trimmed = userInput.trim();
+        if (trimmed.isEmpty()) {
+            return new NameContainsKeywordsPredicate(Collections.emptyList());
+        }
+        List<String> tokens = Arrays.asList(trimmed.split("\\s+"));
+        return new NameContainsKeywordsPredicate(tokens);
     }
 }
