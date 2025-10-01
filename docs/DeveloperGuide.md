@@ -262,13 +262,14 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
+* Freelance professionals and consultants who manage multiple client relationships
+* has a need to manage a significant number of client contacts
 * prefer desktop apps over other types
-* can type fast
-* prefers typing to mouse interactions
+* can type fast and prefer typing over mouse/voice commands
 * is reasonably comfortable using CLI apps
+* need quick access to client information for project management
 
-**Value proposition**: manage contacts faster than a typical mouse/GUI driven app
+**Value proposition**: Eliminates time-consuming contact searches and data entry by providing instant CLI-based access to client information, allowing freelancers to manage client relationships more efficiently than traditional GUI apps.
 
 
 ### User stories
@@ -277,56 +278,124 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​                                    | I want to …​                     | So that I can…​                                                        |
 | -------- | ------------------------------------------ | ------------------------------ | ---------------------------------------------------------------------- |
-| `* * *`  | new user                                   | see usage instructions         | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person               |                                                                        |
-| `* * *`  | user                                       | delete a person                | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name          | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details   | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name           | locate a person easily                                                 |
+| `* * *`  | freelance professional | add new client contacts quickly | build my client database efficiently |
+| `* * *`  | freelance professional | find clients by name | quickly access their contact information |
+| `* * *`  | freelance professional | delete outdated contacts | keep my database clean and current |
+| `* * *`  | freelance professional | view all my contacts | see my entire client base at a glance |
+| `* *`    | freelance professional | edit client details | update information when clients change contact details |
+| `* *`    | freelance professional | add notes to contacts | track project details and meeting summaries |
+| `* *`    | freelance professional | tag contacts by category | organize clients by project type or priority |
+| `* *`    | freelance professional | search contacts by company | find all contacts from a specific organization |
+| `*`      | freelance professional | sort contacts alphabetically | locate clients more systematically |
+| `*`      | freelance professional | export contact data | backup or share client information |
+| `*`      | freelance professional | view recent contacts | quickly access frequently contacted clients |
 
 *{More to be added}*
 
 ### Use cases
 
-(For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is `QuickCLI` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Delete a person**
+**Use case: UC01 - Add a new client contact**
 
 **MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+1.  User requests to add a new contact with name and phone number
+2.  QuickCLI validates the input format
+3.  QuickCLI checks for duplicate contacts
+4.  QuickCLI adds the contact to the database
+5.  QuickCLI displays success message with contact details
 
     Use case ends.
 
 **Extensions**
 
-* 2a. The list is empty.
+* 2a. Invalid input format (e.g., missing required fields, invalid phone number).
+    * 2a1. QuickCLI shows specific error message.
+    * 2a2. User enters corrected command.
+
+  Use case resumes at step 2.
+
+* 3a. Duplicate contact exists (same name and phone).
+    * 3a1. QuickCLI shows duplicate warning.
+    * 3a2. QuickCLI displays existing contact details.
 
   Use case ends.
 
-* 3a. The given index is invalid.
+**Use case: UC02 - Find client by name**
 
-    * 3a1. AddressBook shows an error message.
+**MSS**
 
-      Use case resumes at step 2.
+1.  User requests to find contacts with keyword(s)
+2.  QuickCLI searches for contacts with names containing the keyword(s)
+3.  QuickCLI displays filtered list of matching contacts
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. No contacts match the search criteria.
+    * 2a1. QuickCLI shows "0 contacts found" message.
+
+  Use case ends.
+
+**Use case: UC03 - Add notes to a contact**
+
+**MSS**
+
+1.  User requests to list all contacts
+2.  QuickCLI shows list of contacts with index numbers
+3.  User requests to add note to specific contact by index
+4.  QuickCLI adds the note to the contact
+5.  QuickCLI displays success message
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. The contact list is empty.
+
+  Use case ends.
+
+* 3a. Invalid index provided.
+    * 3a1. QuickCLI shows error message.
+
+  Use case resumes at step 3.
+
+* 3b. Note exceeds 500 character limit.
+    * 3b1. QuickCLI shows error message about character limit.
+
+  Use case resumes at step 3.
 
 *{More to be added}*
 
 ### Non-Functional Requirements
 
-1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+1.  **Performance**: Should execute any command in less than 100ms for typical usage.
+2.  **Capacity**: Should be able to hold up to 1000 contacts without noticeable sluggishness in performance.
+3.  **Usability**: A user with above average typing speed should be able to accomplish tasks faster using CLI commands than using mouse interactions.
+4.  **Compatibility**: Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
+5.  **Portability**: Should work without requiring installer or admin rights (portable executable).
+6.  **Data Integrity**: Should save data automatically after each command that modifies data.
+7.  **Reliability**: Should handle invalid commands gracefully with clear error messages.
+8.  **Learning Curve**: New users should be able to use basic commands within 5 minutes of reading the user guide.
+9.  **Data Format**: Data should be stored in human-readable JSON format for easy backup and manual editing if needed.
+10. **Screen Resolution**: Should be usable on screens with resolution of 1280x720 or higher.
 
 *{More to be added}*
 
 ### Glossary
 
+* **CLI**: Command Line Interface - A text-based interface where users interact with the application by typing commands
+* **Client Contact**: A business contact entry containing name, phone, email, company, and tags
+* **Command**: A text instruction typed by the user to perform an action in QuickCLI
+* **Duplicate Contact**: Two contacts with the same name AND phone number
+* **Index**: A number shown next to each contact in the displayed list, used to reference specific contacts
+* **JSON**: JavaScript Object Notation - A human-readable data format used to store contact data
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
+* **Parameter**: Additional information provided with a command (e.g., name, phone number)
+* **Tag**: A single-word label used to categorize contacts (e.g., "priority", "designer")
+* **Freelance Professional**: Self-employed individual offering services to multiple clients
 
 --------------------------------------------------------------------------------------------------------------------
 
