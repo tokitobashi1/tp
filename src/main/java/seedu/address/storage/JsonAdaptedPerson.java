@@ -37,8 +37,8 @@ class JsonAdaptedPerson {
      */
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
-                         @JsonProperty("email") String email, @JsonProperty("address") String address,
-                         @JsonProperty("company") String company, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+                             @JsonProperty("email") String email, @JsonProperty("address") String address,
+                             @JsonProperty("company") String company, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -90,31 +90,27 @@ class JsonAdaptedPerson {
         }
         final Phone modelPhone = new Phone(phone);
 
-        // Email is optional
         final Email modelEmail;
-        if (email != null) {
+        if (email == null) {
+            modelEmail = null;
+        } else {
             if (!Email.isValidEmail(email)) {
                 throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
             }
             modelEmail = new Email(email);
-        } else {
-            modelEmail = null;
         }
 
-        // Address is optional
         final Address modelAddress;
-        if (address != null) {
+        if (address == null) {
+            modelAddress = null;
+        } else {
             if (!Address.isValidAddress(address)) {
                 throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
             }
             modelAddress = new Address(address);
-        } else {
-            modelAddress = null;
         }
 
-        final Set<Tag> modelTags = new HashSet<>(personTags);
         final Company modelCompany;
-        
         if (company != null) {
             if (!Company.isValidCompany(company)) {
                 throw new IllegalValueException(Company.MESSAGE_CONSTRAINTS);
@@ -124,6 +120,7 @@ class JsonAdaptedPerson {
             modelCompany = null;
         }
 
+        final Set<Tag> modelTags = new HashSet<>(personTags);
         return new Person(modelName, modelPhone, modelEmail, modelAddress, modelCompany, modelTags);
     }
 
