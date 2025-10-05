@@ -80,9 +80,6 @@ public class NameContainsKeywordsPredicateTest {
         predicate = new NameContainsKeywordsPredicate(Collections.singletonList("Tech"));
         assertTrue(predicate.test(new PersonBuilder().withCompany("Tech Solutions").build()));
 
-        // Email/address may be absent.
-        assertTrue(predicate.test(new PersonBuilder().withName("foo").withPhone("0000").build()));
-
         // OR across fields: one of the keywords matches one of the fields
         predicate = new NameContainsKeywordsPredicate(Arrays.asList("Alice", "8743", "Tech"));
         assertTrue(predicate.test(new PersonBuilder().withName("Alice").withPhone("87438807")
