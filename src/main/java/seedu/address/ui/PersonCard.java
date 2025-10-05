@@ -52,8 +52,25 @@ public class PersonCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
         phone.setText(person.getPhone().value);
-        address.setText(person.getAddress().value);
-        email.setText(person.getEmail().value);
+        // Address (optional)
+        if (person.getAddress() != null) {
+            address.setText(person.getAddress().value);
+            address.setVisible(true);
+            address.setManaged(true);
+        } else {
+            address.setVisible(false);
+            address.setManaged(false);
+        }
+
+        // Email (optional)
+        if (person.getEmail() != null) {
+            email.setText(person.getEmail().value);
+            email.setVisible(true);
+            email.setManaged(true);
+        } else {
+            email.setVisible(false);
+            email.setManaged(false);
+        }
 
         // Set company text if present, hide label if not
         if (person.getCompany() != null) {

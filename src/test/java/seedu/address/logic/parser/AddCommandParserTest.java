@@ -53,6 +53,8 @@ public class AddCommandParserTest {
     private static final String INVALID_COMPANY_DESC = " c/Comp@ny!";
     private static final String VALID_COMPANY_AMY = "Amy Corp";
     private static final String VALID_COMPANY_BOB = "Bob Industries";
+
+    private static final String MINIMAL_INPUT_AMY = NAME_DESC_AMY + PHONE_DESC_AMY;
     private AddCommandParser parser = new AddCommandParser();
 
     @Test
@@ -201,6 +203,17 @@ public class AddCommandParserTest {
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
     }
 
+    @Test
+    public void parse_minimumFields_success() {
+        // only name and phone
+        Person expectedPerson = new PersonBuilder(AMY)
+                .withEmail(null)
+                .withAddress(null)
+                .withCompany(null)
+                .withTags()
+                .build();
+        assertParseSuccess(parser, MINIMAL_INPUT_AMY, new AddCommand(expectedPerson));
+    }
     @Test
     public void parse_optionalCompanyPresent_success() {
         Person expectedPerson = new PersonBuilder(AMY)
