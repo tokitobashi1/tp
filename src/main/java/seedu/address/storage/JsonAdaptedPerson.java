@@ -90,6 +90,7 @@ class JsonAdaptedPerson {
         }
         final Phone modelPhone = new Phone(phone);
 
+        // Email is optional. If present, validate; otherwise keep null.
         final Email modelEmail;
         if (email == null) {
             modelEmail = null;
@@ -100,6 +101,7 @@ class JsonAdaptedPerson {
             modelEmail = new Email(email);
         }
 
+        // Address is optional. If present, validate; otherwise keep null.
         final Address modelAddress;
         if (address == null) {
             modelAddress = null;

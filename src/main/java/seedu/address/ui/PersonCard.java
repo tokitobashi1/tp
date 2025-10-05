@@ -58,6 +58,7 @@ public class PersonCard extends UiPart<Region> {
             address.setVisible(true);
             address.setManaged(true);
         } else {
+            address.setText("");
             address.setVisible(false);
             address.setManaged(false);
         }
@@ -68,6 +69,7 @@ public class PersonCard extends UiPart<Region> {
             email.setVisible(true);
             email.setManaged(true);
         } else {
+            email.setText("");
             email.setVisible(false);
             email.setManaged(false);
         }
@@ -78,6 +80,7 @@ public class PersonCard extends UiPart<Region> {
             company.setVisible(true);
             company.setManaged(true);
         } else {
+            company.setText("");
             company.setVisible(false);
             company.setManaged(false);
         }
