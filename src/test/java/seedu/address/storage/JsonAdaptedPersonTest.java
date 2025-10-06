@@ -145,4 +145,11 @@ public class JsonAdaptedPersonTest {
         assertThrows(IllegalValueException.class, person::toModelType);
     }
 
+    @Test
+    public void toModelType_nullFields_returnsPerson() throws Exception {
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, null, null, null, VALID_TAGS);
+        Person modelPerson = person.toModelType();
+        assertEquals(null, modelPerson.getEmail());
+        assertEquals(null, modelPerson.getAddress());
+    }
 }

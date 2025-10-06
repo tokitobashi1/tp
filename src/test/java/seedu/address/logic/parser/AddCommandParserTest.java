@@ -18,7 +18,9 @@ import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_NON_EMPTY;
 import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_FRIEND;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_HUSBAND;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
@@ -228,4 +230,20 @@ public class AddCommandParserTest {
                         + ADDRESS_DESC_AMY + COMPANY_DESC_AMY + COMPANY_DESC_BOB,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_COMPANY));
     }
+
+    @Test
+    public void parse_optionalEmailAndAddress_success() {
+        AddCommandParser parser = new AddCommandParser();
+        String userInput = NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY;
+
+        Person expectedPerson = new PersonBuilder(AMY)
+                .withEmail(VALID_EMAIL_AMY)
+                .withAddress(VALID_ADDRESS_AMY)
+                .withCompany(null)
+                .withTags()
+                .build();
+
+        assertParseSuccess(parser, userInput, new AddCommand(expectedPerson));
+    }
+
 }
