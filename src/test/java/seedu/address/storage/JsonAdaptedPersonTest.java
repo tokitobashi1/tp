@@ -18,7 +18,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
-
+import seedu.address.testutil.PersonBuilder;
 public class JsonAdaptedPersonTest {
     private static final String INVALID_NAME = "R@chel";
     private static final String INVALID_PHONE = "+651234";
@@ -143,6 +143,22 @@ public class JsonAdaptedPersonTest {
         JsonAdaptedPerson person = new JsonAdaptedPerson(
                 VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS, "", VALID_TAGS);
         assertThrows(IllegalValueException.class, person::toModelType);
+    }
+
+    @Test
+    public void toModelType_personConstructor_nullFields() throws Exception {
+        Person personWithNulls = new PersonBuilder(BENSON)
+                .withEmail(null)
+                .withAddress(null)
+                .withCompany(null)
+                .withTags(BENSON.getTags().stream().map(tag -> tag.tagName).toArray(String[]::new))
+                .build();
+
+
+        JsonAdaptedPerson adapted = new JsonAdaptedPerson(personWithNulls);
+        Person modelPerson = adapted.toModelType();
+
+        assertEquals(personWithNulls, modelPerson);
     }
 
     @Test
