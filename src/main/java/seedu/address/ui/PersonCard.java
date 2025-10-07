@@ -53,40 +53,51 @@ public class PersonCard extends UiPart<Region> {
         name.setText(person.getName().fullName);
         phone.setText(person.getPhone().value);
         // Address (optional)
-        if (person.getAddress() != null) {
-            address.setText(person.getAddress().value);
-            address.setVisible(true);
-            address.setManaged(true);
-        } else {
-            address.setText("");
-            address.setVisible(false);
-            address.setManaged(false);
-        }
+        address.setText(getAddressText(person));
+        address.setVisible(isAddressVisible(person));
+        address.setManaged(isAddressVisible(person));
 
         // Email (optional)
-        if (person.getEmail() != null) {
-            email.setText(person.getEmail().value);
-            email.setVisible(true);
-            email.setManaged(true);
-        } else {
-            email.setText("");
-            email.setVisible(false);
-            email.setManaged(false);
-        }
+        email.setText(getEmailText(person));
+        email.setVisible(isEmailVisible(person));
+        email.setManaged(isEmailVisible(person));
 
-        // Set company text if present, hide label if not
-        if (person.getCompany() != null) {
-            company.setText(person.getCompany().value);
-            company.setVisible(true);
-            company.setManaged(true);
-        } else {
-            company.setText("");
-            company.setVisible(false);
-            company.setManaged(false);
-        }
+        // Company (optional)
+        company.setText(getCompanyText(person));
+        company.setVisible(isCompanyVisible(person));
+        company.setManaged(isCompanyVisible(person));
 
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
+
+    /*
+     * Package-private pure helpers to determine what the UI should display for optional fields.
+     * These are intentionally pure and depend only on Person so they can be tested without JavaFX.
+     */
+    static String getAddressText(Person person) {
+        return person.getAddress() != null ? person.getAddress().value : "";
+    }
+
+    static boolean isAddressVisible(Person person) {
+        return person.getAddress() != null;
+    }
+
+    static String getEmailText(Person person) {
+        return person.getEmail() != null ? person.getEmail().value : "";
+    }
+
+    static boolean isEmailVisible(Person person) {
+        return person.getEmail() != null;
+    }
+
+    static String getCompanyText(Person person) {
+        return person.getCompany() != null ? person.getCompany().value : "";
+    }
+
+    static boolean isCompanyVisible(Person person) {
+        return person.getCompany() != null;
+    }
+
 }
