@@ -28,6 +28,12 @@ public class PersonCardViewModel {
 
     private final String tagsText;
 
+    /**
+     * Constructs a {@code PersonCardViewModel} with information extracted from a {@code Person}.
+     *
+     * @param person The person to extract data from.
+     * @param displayedIndex The index of the person in the displayed list.
+     */
     public PersonCardViewModel(Person person, int displayedIndex) {
         Objects.requireNonNull(person);
         this.idText = displayedIndex + ". ";
