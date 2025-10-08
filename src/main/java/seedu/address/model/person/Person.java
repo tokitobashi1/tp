@@ -68,8 +68,10 @@ public class Person {
     }
 
     /**
-     * Returns true if both persons have the same name.
+     * Returns true if both persons have the same name and phone number.
      * This defines a weaker notion of equality between two persons.
+     * Two persons are considered duplicates if they have both the same name AND phone number,
+     * as it's unlikely for different people to share both these identity fields.
      */
     public boolean isSamePerson(Person otherPerson) {
         if (otherPerson == this) {
@@ -77,7 +79,8 @@ public class Person {
         }
 
         return otherPerson != null
-                && otherPerson.getName().equals(getName());
+                && otherPerson.getName().equals(getName())
+                && otherPerson.getPhone().equals(getPhone());
     }
 
     /**
