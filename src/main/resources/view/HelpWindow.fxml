@@ -8,6 +8,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.stage.Stage?>
 
 <fx:root resizable="false" title="Help" type="javafx.stage.Stage"
@@ -25,7 +26,10 @@
             </stylesheets>
 
             <!-- Main container -->
-            <VBox alignment="CENTER" spacing="15" padding="20">
+            <VBox alignment="CENTER" spacing="15">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
 
                 <!-- Optional help icon -->
                 <ImageView fitHeight="60" fitWidth="60">
@@ -54,4 +58,3 @@
         </Scene>
     </scene>
 </fx:root>
-
