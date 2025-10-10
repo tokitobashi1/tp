@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.person.Person;
@@ -112,6 +113,12 @@ public class ModelManager implements Model {
         addressBook.setPerson(target, editedPerson);
     }
 
+    @Override
+    public void sortPersonList(Comparator<Person> comparator) {
+        requireNonNull(comparator);
+        addressBook.sortPersons(comparator);
+    }
+
     //=========== Filtered Person List Accessors =============================================================
 
     /**
@@ -144,11 +151,5 @@ public class ModelManager implements Model {
         return addressBook.equals(otherModelManager.addressBook)
                 && userPrefs.equals(otherModelManager.userPrefs)
                 && filteredPersons.equals(otherModelManager.filteredPersons);
-    }
-
-    @Override
-    public void sortFilteredPersonList(Comparator<Person> comparator) {
-        requireNonNull(comparator);
-        filteredPersons.sort(comparator);
     }
 }

@@ -16,7 +16,7 @@ public class SortCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.sortFilteredPersonList(Comparator.comparing(p -> p.getName().fullName.toLowerCase()));
+        model.sortPersonList(Comparator.comparing(p -> p.getName().fullName.toLowerCase()));
         return new CommandResult(MESSAGE_SUCCESS);
     }
 }
