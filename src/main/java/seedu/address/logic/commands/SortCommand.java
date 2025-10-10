@@ -1,8 +1,10 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import seedu.address.model.Model;
+
 import java.util.Comparator;
+
+import seedu.address.model.Model;
 
 /**
  * Sorts the contacts in the address book by name.

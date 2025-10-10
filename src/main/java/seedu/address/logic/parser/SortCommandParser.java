@@ -1,7 +1,6 @@
 package seedu.address.logic.parser;
 
 import seedu.address.logic.commands.SortCommand;
-import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
  * Parses the given {@code String} of arguments in the context of the SortCommand
