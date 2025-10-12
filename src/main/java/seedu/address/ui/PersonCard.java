@@ -38,35 +38,41 @@ public class PersonCard extends UiPart<Region> {
     private FlowPane tags;
 
     /**
-     * Creates a {@code PersonCode} with the given {@code Person} and index to display.
+     * Creates a {@code PersonCard} with the given {@code Person} and index to display.
      */
     public PersonCard(Person person, int displayedIndex) {
         super(FXML);
         this.person = person;
-        id.setText(displayedIndex + ". ");
-        name.setText(person.getName().fullName);
-        phone.setText(person.getPhone().value);
 
-        // Address (optional)
-        address.setText(getAddressText(person));
-        address.setVisible(isAddressVisible(person));
-        address.setManaged(isAddressVisible(person));
+        // Create view model to handle presentation logic
+        PersonCardViewModel viewModel = new PersonCardViewModel(person, displayedIndex);
 
-        // Email (optional)
-        email.setText(getEmailText(person));
-        email.setVisible(isEmailVisible(person));
-        email.setManaged(isEmailVisible(person));
+        // Set required fields
+        id.setText(viewModel.getIdText());
+        name.setText(viewModel.getNameText());
+        phone.setText(viewModel.getPhoneText());
 
-        // Company (optional)
-        company.setText(getCompanyText(person));
-        company.setVisible(isCompanyVisible(person));
-        company.setManaged(isCompanyVisible(person));
+        // Set optional address field
+        address.setText(viewModel.getAddressText());
+        address.setVisible(viewModel.isAddressVisible());
+        address.setManaged(viewModel.isAddressVisible());
 
-        // Note (optional)
-        note.setText(getNoteText(person));
-        note.setVisible(isNoteVisible(person));
-        note.setManaged(isNoteVisible(person));
+        // Set optional email field
+        email.setText(viewModel.getEmailText());
+        email.setVisible(viewModel.isEmailVisible());
+        email.setManaged(viewModel.isEmailVisible());
 
+        // Set optional company field
+        company.setText(viewModel.getCompanyText());
+        company.setVisible(viewModel.isCompanyVisible());
+        company.setManaged(viewModel.isCompanyVisible());
+
+        // Set optional note field
+        note.setText(viewModel.getNoteText());
+        note.setVisible(viewModel.isNoteVisible());
+        note.setManaged(viewModel.isNoteVisible());
+
+        // Set tags
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
@@ -97,10 +103,12 @@ public class PersonCard extends UiPart<Region> {
     }
 
     static String getNoteText(Person person) {
-        return person.getNote() != null ? "Note: " + person.getNote().value : "";
+        return person.getNote() != null && !person.getNote().isEmpty()
+                ? "Note: " + person.getNote().value
+                : "";
     }
 
     static boolean isNoteVisible(Person person) {
-        return person.getNote() != null && !person.getNote().value.equals("-");
+        return person.getNote() != null && !person.getNote().isEmpty();
     }
 }

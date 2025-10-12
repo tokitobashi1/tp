@@ -8,8 +8,8 @@ import seedu.address.model.person.Person;
 /**
  * A small presentation-model for PersonCard UI logic that can be tested without JavaFX.
  *
- * Responsible only for producing strings and visibility flags for optional fields (address, email, company)
- * and for producing a sorted tag summary string.
+ * Responsible only for producing strings and visibility flags for optional fields
+ * (address, email, company, note) and for producing a sorted tag summary string.
  */
 public class PersonCardViewModel {
 
@@ -26,6 +26,9 @@ public class PersonCardViewModel {
     private final String companyText;
     private final boolean companyVisible;
 
+    private final String noteText;
+    private final boolean noteVisible;
+
     private final String tagsText;
 
     /**
@@ -40,6 +43,7 @@ public class PersonCardViewModel {
         this.nameText = person.getName().fullName;
         this.phoneText = person.getPhone().value;
 
+        // Handle optional address
         if (person.getAddress() != null) {
             this.addressText = person.getAddress().value;
             this.addressVisible = true;
@@ -48,6 +52,7 @@ public class PersonCardViewModel {
             this.addressVisible = false;
         }
 
+        // Handle optional email
         if (person.getEmail() != null) {
             this.emailText = person.getEmail().value;
             this.emailVisible = true;
@@ -56,6 +61,7 @@ public class PersonCardViewModel {
             this.emailVisible = false;
         }
 
+        // Handle optional company
         if (person.getCompany() != null) {
             this.companyText = person.getCompany().value;
             this.companyVisible = true;
@@ -64,6 +70,16 @@ public class PersonCardViewModel {
             this.companyVisible = false;
         }
 
+        // Handle optional note
+        if (person.getNote() != null && !person.getNote().isEmpty()) {
+            this.noteText = "Note: " + person.getNote().value;
+            this.noteVisible = true;
+        } else {
+            this.noteText = "";
+            this.noteVisible = false;
+        }
+
+        // Handle tags
         this.tagsText = person.getTags().stream()
                 .map(tag -> tag.tagName)
                 .sorted()
@@ -106,6 +122,14 @@ public class PersonCardViewModel {
 
     public boolean isCompanyVisible() {
         return companyVisible;
+    }
+
+    public String getNoteText() {
+        return noteText;
+    }
+
+    public boolean isNoteVisible() {
+        return noteVisible;
     }
 
     public String getTagsText() {
