@@ -26,6 +26,7 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Company;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Note;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
@@ -129,7 +130,8 @@ public class EditCommand extends Command {
                 updated(editPersonDescriptor.getEmail(), personToEdit.getEmail()),
                 updated(editPersonDescriptor.getAddress(), personToEdit.getAddress()),
                 updated(editPersonDescriptor.getCompany(), personToEdit.getCompany()),
-                updated(editPersonDescriptor.getTags(), personToEdit.getTags())
+                updated(editPersonDescriptor.getTags(), personToEdit.getTags()),
+                updated(editPersonDescriptor.getNote(), personToEdit.getNote())
         );
     }
 
@@ -165,6 +167,7 @@ public class EditCommand extends Command {
         private Email email;
         private Address address;
         private Company company;
+        private Note note;
         private Set<Tag> tags;
 
         public EditPersonDescriptor() {}
@@ -179,6 +182,7 @@ public class EditCommand extends Command {
             setEmail(toCopy.email);
             setAddress(toCopy.address);
             setCompany(toCopy.company);
+            setNote(toCopy.note);
             setTags(toCopy.tags);
         }
 
@@ -186,7 +190,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, company, tags);
+            return CollectionUtil.isAnyNonNull(name, phone, email, address, company, note, tags);
         }
 
         public void setName(Name name) {
@@ -229,6 +233,10 @@ public class EditCommand extends Command {
             return Optional.ofNullable(company);
         }
 
+        public void setNote(Note note) { this.note = note; }
+
+        public Optional<Note> getNote() { return Optional.ofNullable(note); }
+
         /**
          * Sets {@code tags} to this object's {@code tags}.
          * A defensive copy of {@code tags} is used internally.
@@ -262,6 +270,7 @@ public class EditCommand extends Command {
                     && Objects.equals(email, otherEditPersonDescriptor.email)
                     && Objects.equals(address, otherEditPersonDescriptor.address)
                     && Objects.equals(company, otherEditPersonDescriptor.company)
+                    && Objects.equals(note, otherEditPersonDescriptor.note)
                     && Objects.equals(tags, otherEditPersonDescriptor.tags);
         }
 
@@ -273,6 +282,7 @@ public class EditCommand extends Command {
                     .add("email", email)
                     .add("address", address)
                     .add("company", company)
+                    .add("note", note)
                     .add("tags", tags)
                     .toString();
         }

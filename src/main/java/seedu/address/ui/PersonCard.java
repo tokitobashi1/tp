@@ -16,14 +16,6 @@ public class PersonCard extends UiPart<Region> {
 
     private static final String FXML = "PersonListCard.fxml";
 
-    /**
-     * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
-     * As a consequence, UI elements' variable names cannot be set to such keywords
-     * or an exception will be thrown by JavaFX during runtime.
-     *
-     * @see <a href="https://github.com/se-edu/addressbook-level4/issues/336">The issue on AddressBook level 4</a>
-     */
-
     public final Person person;
 
     @FXML
@@ -41,6 +33,8 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label company;
     @FXML
+    private Label note;
+    @FXML
     private FlowPane tags;
 
     /**
@@ -52,6 +46,7 @@ public class PersonCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
         phone.setText(person.getPhone().value);
+
         // Address (optional)
         address.setText(getAddressText(person));
         address.setVisible(isAddressVisible(person));
@@ -67,15 +62,16 @@ public class PersonCard extends UiPart<Region> {
         company.setVisible(isCompanyVisible(person));
         company.setManaged(isCompanyVisible(person));
 
+        // Note (optional)
+        note.setText(getNoteText(person));
+        note.setVisible(isNoteVisible(person));
+        note.setManaged(isNoteVisible(person));
+
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
 
-    /*
-     * Package-private pure helpers to determine what the UI should display for optional fields.
-     * These are intentionally pure and depend only on Person so they can be tested without JavaFX.
-     */
     static String getAddressText(Person person) {
         return person.getAddress() != null ? person.getAddress().value : "";
     }
@@ -100,4 +96,11 @@ public class PersonCard extends UiPart<Region> {
         return person.getCompany() != null;
     }
 
+    static String getNoteText(Person person) {
+        return person.getNote() != null ? "Note: " + person.getNote().value : "";
+    }
+
+    static boolean isNoteVisible(Person person) {
+        return person.getNote() != null && !person.getNote().value.equals("-");
+    }
 }
