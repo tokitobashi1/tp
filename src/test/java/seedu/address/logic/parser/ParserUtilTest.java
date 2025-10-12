@@ -18,6 +18,7 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Company;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Note;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 
@@ -229,4 +230,36 @@ public class ParserUtilTest {
     public void parseCompany_blankString_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseCompany("   "));
     }
+
+    @Test
+    public void parseNote_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseNote(null));
+    }
+
+    @Test
+    public void parseNote_validValueWithoutWhitespace_returnsNote() throws Exception {
+        String noteValue = "Important client";
+        Note expectedNote = new Note(noteValue);
+        assertEquals(expectedNote, ParserUtil.parseNote(noteValue));
+    }
+
+    @Test
+    public void parseNote_validValueWithWhitespace_returnsTrimmedNote() throws Exception {
+        String noteWithWhitespace = WHITESPACE + "Important client" + WHITESPACE;
+        Note expectedNote = new Note("Important client");
+        assertEquals(expectedNote, ParserUtil.parseNote(noteWithWhitespace));
+    }
+
+    @Test
+    public void parseNote_emptyString_returnsPlaceholderNote() throws Exception {
+        Note expectedNote = new Note("-");
+        assertEquals(expectedNote, ParserUtil.parseNote(""));
+    }
+
+    @Test
+    public void parseNote_whitespaceString_returnsPlaceholderNote() throws Exception {
+        Note expectedNote = new Note("-");
+        assertEquals(expectedNote, ParserUtil.parseNote("   "));
+    }
+
 }

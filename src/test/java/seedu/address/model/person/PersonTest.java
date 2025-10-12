@@ -102,7 +102,21 @@ public class PersonTest {
     public void toStringMethod() {
         String expected = Person.class.getCanonicalName() + "{name=" + ALICE.getName() + ", phone=" + ALICE.getPhone()
                 + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress() + ", company=" + ALICE.getCompany()
-                + ", tags=" + ALICE.getTags() + "}";
+                + ", note=" + ALICE.getNote() + ", tags=" + ALICE.getTags() + "}";
         assertEquals(expected, ALICE.toString());
     }
+
+    @Test
+    public void equals_differentNote_returnsFalse() {
+        Person editedAlice = new PersonBuilder(ALICE).withNote("Different note").build();
+        assertFalse(ALICE.equals(editedAlice));
+    }
+
+    @Test
+    public void isSamePerson_sameNameAndPhoneDifferentNote_returnsTrue() {
+        // Same name and phone, but different note -> returns true
+        Person editedAlice = new PersonBuilder(ALICE).withNote("Updated note").build();
+        assertTrue(ALICE.isSamePerson(editedAlice));
+    }
+
 }

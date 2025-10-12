@@ -152,7 +152,7 @@ public class ParserUtil {
 
         // Allow empty string to clear the note
         if (trimmedNote.isEmpty()) {
-            return new Note("-"); // Use a placeholder that passes validation
+            return new Note(Note.EMPTY_NOTE_PLACEHOLDER);
         }
 
         if (!Note.isValidNote(trimmedNote)) {

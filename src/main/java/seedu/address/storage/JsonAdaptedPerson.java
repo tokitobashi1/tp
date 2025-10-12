@@ -59,13 +59,13 @@ class JsonAdaptedPerson {
     public JsonAdaptedPerson(Person source) {
         name = source.getName().fullName;
         phone = source.getPhone().value;
-        email = source.getEmail().value;
-        address = source.getAddress().value;
+        email = source.getEmail() != null ? source.getEmail().value : null;
+        address = source.getAddress() != null ? source.getAddress().value : null;
         company = source.getCompany() != null ? source.getCompany().value : null;
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
-        note = source.getNote().value;
+        note = source.getNote() != null ? source.getNote().value : null;
     }
 
     /**
@@ -95,22 +95,29 @@ class JsonAdaptedPerson {
         }
         final Phone modelPhone = new Phone(phone);
 
-        if (email == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
+        // Email is optional
+        final Email modelEmail;
+        if (email != null) {
+            if (!Email.isValidEmail(email)) {
+                throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
+            }
+            modelEmail = new Email(email);
+        } else {
+            modelEmail = null;
         }
-        if (!Email.isValidEmail(email)) {
-            throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
-        }
-        final Email modelEmail = new Email(email);
 
-        if (address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
+        // Address is optional
+        final Address modelAddress;
+        if (address != null) {
+            if (!Address.isValidAddress(address)) {
+                throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
+            }
+            modelAddress = new Address(address);
+        } else {
+            modelAddress = null;
         }
-        if (!Address.isValidAddress(address)) {
-            throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
-        }
-        final Address modelAddress = new Address(address);
 
+        // Company is optional
         final Company modelCompany;
         if (company != null) {
             if (!Company.isValidCompany(company)) {
@@ -123,7 +130,16 @@ class JsonAdaptedPerson {
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
-        final Note modelNote = new Note(note != null ? note : "");
+        // Note is optional
+        final Note modelNote;
+        if (note != null && !note.isEmpty()) {
+            if (!Note.isValidNote(note)) {
+                throw new IllegalValueException(Note.MESSAGE_CONSTRAINTS);
+            }
+            modelNote = new Note(note);
+        } else {
+            modelNote = null;
+        }
 
         return new Person(modelName, modelPhone, modelEmail, modelAddress, modelCompany, modelTags, modelNote);
     }
