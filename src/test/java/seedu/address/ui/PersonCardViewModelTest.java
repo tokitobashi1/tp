@@ -18,6 +18,7 @@ public class PersonCardViewModelTest {
                 .withEmail(null)
                 .withAddress(null)
                 .withCompany(null)
+                .withNote(null)
                 .withTags()
                 .build();
 
@@ -36,6 +37,9 @@ public class PersonCardViewModelTest {
         assertEquals("", vm.getCompanyText());
         assertFalse(vm.isCompanyVisible());
 
+        assertEquals("", vm.getNoteText());
+        assertFalse(vm.isNoteVisible());
+
         assertEquals("", vm.getTagsText());
     }
 
@@ -47,6 +51,7 @@ public class PersonCardViewModelTest {
                 .withEmail("alice@example.com")
                 .withAddress("1 Main St")
                 .withCompany("Acme Corp")
+                .withNote("Important client")
                 .withTags("friend", "colleague")
                 .build();
 
@@ -65,6 +70,37 @@ public class PersonCardViewModelTest {
         assertEquals("Acme Corp", vm.getCompanyText());
         assertTrue(vm.isCompanyVisible());
 
+        assertEquals("Note: Important client", vm.getNoteText());
+        assertTrue(vm.isNoteVisible());
+
         assertEquals("colleague, friend", vm.getTagsText());
+    }
+
+    @Test
+    public void viewModel_emptyNote_notVisible() {
+        var person = new PersonBuilder()
+                .withName("Bob")
+                .withPhone("5678")
+                .withNote("-")
+                .build();
+
+        PersonCardViewModel vm = new PersonCardViewModel(person, 2);
+
+        assertEquals("", vm.getNoteText());
+        assertFalse(vm.isNoteVisible());
+    }
+
+    @Test
+    public void viewModel_noteWithSpecialCharacters_showsCorrectly() {
+        var person = new PersonBuilder()
+                .withName("Charlie")
+                .withPhone("9012")
+                .withNote("Call before 5pm! Very important.")
+                .build();
+
+        PersonCardViewModel vm = new PersonCardViewModel(person, 1);
+
+        assertEquals("Note: Call before 5pm! Very important.", vm.getNoteText());
+        assertTrue(vm.isNoteVisible());
     }
 }

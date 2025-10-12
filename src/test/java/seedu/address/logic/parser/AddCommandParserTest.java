@@ -31,6 +31,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_REMARK;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalPersons.AMY;
@@ -249,6 +250,48 @@ public class AddCommandParserTest {
                 .build();
 
         assertParseSuccess(parser, userInput, new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_optionalNotePresent_success() {
+        Person expectedPerson = new PersonBuilder(AMY)
+                .withNote("Important client")
+                .withTags()
+                .build();
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY + " r/Important client", new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_optionalNoteMissing_success() {
+        Person expectedPerson = new PersonBuilder(AMY)
+                .withNote(null)
+                .withTags()
+                .build();
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY, new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_multipleNotes_failure() {
+        assertParseFailure(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                        + ADDRESS_DESC_AMY + " r/First note r/Second note",
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_REMARK));
+    }
+
+    @Test
+    public void parse_allOptionalFieldsIncludingNote_success() {
+        Person expectedPerson = new PersonBuilder(AMY)
+                .withEmail(VALID_EMAIL_AMY)
+                .withAddress(VALID_ADDRESS_AMY)
+                .withCompany("Tech Corp")
+                .withNote("Prefers email contact")
+                .withTags()
+                .build();
+
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                        + ADDRESS_DESC_AMY + " c/Tech Corp r/Prefers email contact",
+                new AddCommand(expectedPerson));
     }
 
 }
