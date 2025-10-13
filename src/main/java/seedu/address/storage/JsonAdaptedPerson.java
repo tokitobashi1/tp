@@ -14,6 +14,7 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Company;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Note;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
@@ -31,6 +32,7 @@ class JsonAdaptedPerson {
     private final String address;
     private final String company;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final String note;
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -38,7 +40,8 @@ class JsonAdaptedPerson {
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
                              @JsonProperty("email") String email, @JsonProperty("address") String address,
-                             @JsonProperty("company") String company, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+                             @JsonProperty("company") String company, @JsonProperty("tags") List<JsonAdaptedTag> tags,
+                             @JsonProperty("note") String note) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -47,6 +50,7 @@ class JsonAdaptedPerson {
         if (tags != null) {
             this.tags.addAll(tags);
         }
+        this.note = note;
     }
 
     /**
@@ -61,6 +65,7 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        note = source.getNote() != null ? source.getNote().value : null;
     }
 
     /**
@@ -90,28 +95,29 @@ class JsonAdaptedPerson {
         }
         final Phone modelPhone = new Phone(phone);
 
-        // Email is optional. If present, validate; otherwise keep null.
+        // Email is optional
         final Email modelEmail;
-        if (email == null) {
-            modelEmail = null;
-        } else {
+        if (email != null) {
             if (!Email.isValidEmail(email)) {
                 throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
             }
             modelEmail = new Email(email);
+        } else {
+            modelEmail = null;
         }
 
-        // Address is optional. If present, validate; otherwise keep null.
+        // Address is optional
         final Address modelAddress;
-        if (address == null) {
-            modelAddress = null;
-        } else {
+        if (address != null) {
             if (!Address.isValidAddress(address)) {
                 throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
             }
             modelAddress = new Address(address);
+        } else {
+            modelAddress = null;
         }
 
+        // Company is optional
         final Company modelCompany;
         if (company != null) {
             if (!Company.isValidCompany(company)) {
@@ -123,7 +129,19 @@ class JsonAdaptedPerson {
         }
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelCompany, modelTags);
+
+        // Note is optional
+        final Note modelNote;
+        if (note != null && !note.isEmpty()) {
+            if (!Note.isValidNote(note)) {
+                throw new IllegalValueException(Note.MESSAGE_CONSTRAINTS);
+            }
+            modelNote = new Note(note);
+        } else {
+            modelNote = null;
+        }
+
+        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelCompany, modelTags, modelNote);
     }
 
 }

@@ -19,7 +19,8 @@ public class PersonCardTest {
                 .withEmail(null)
                 .withAddress(null)
                 .withCompany(null)
-                .withTags() // ensure tags exist (empty) to avoid null tags
+                .withNote(null)
+                .withTags()
                 .build();
 
         assertEquals("", PersonCard.getAddressText(p));
@@ -30,6 +31,9 @@ public class PersonCardTest {
 
         assertEquals("", PersonCard.getCompanyText(p));
         assertFalse(PersonCard.isCompanyVisible(p));
+
+        assertEquals("", PersonCard.getNoteText(p));
+        assertFalse(PersonCard.isNoteVisible(p));
     }
 
     @Test
@@ -40,6 +44,7 @@ public class PersonCardTest {
                 .withEmail("alice@example.com")
                 .withAddress("123, Main Street")
                 .withCompany("Acme Inc")
+                .withNote("VIP client")
                 .withTags("friends")
                 .build();
 
@@ -51,5 +56,53 @@ public class PersonCardTest {
 
         assertEquals("Acme Inc", PersonCard.getCompanyText(p));
         assertTrue(PersonCard.isCompanyVisible(p));
+
+        assertEquals("Note: VIP client", PersonCard.getNoteText(p));
+        assertTrue(PersonCard.isNoteVisible(p));
+    }
+
+    @Test
+    public void helpers_emptyNotePlaceholder_notVisible() {
+        Person p = new PersonBuilder()
+                .withName("Bob")
+                .withPhone("2222")
+                .withNote("-")
+                .build();
+
+        assertEquals("", PersonCard.getNoteText(p));
+        assertFalse(PersonCard.isNoteVisible(p));
+    }
+
+    @Test
+    public void getNoteText_withNote_returnsFormattedNote() {
+        Person p = new PersonBuilder()
+                .withName("Charlie")
+                .withPhone("3333")
+                .withNote("Important contact - call before 5pm")
+                .build();
+
+        assertEquals("Note: Important contact - call before 5pm", PersonCard.getNoteText(p));
+    }
+
+    @Test
+    public void isNoteVisible_withEmptyPlaceholder_returnsFalse() {
+        Person p = new PersonBuilder()
+                .withName("David")
+                .withPhone("4444")
+                .withNote("-")
+                .build();
+
+        assertFalse(PersonCard.isNoteVisible(p));
+    }
+
+    @Test
+    public void isNoteVisible_withRealNote_returnsTrue() {
+        Person p = new PersonBuilder()
+                .withName("Eve")
+                .withPhone("5555")
+                .withNote("Regular customer")
+                .build();
+
+        assertTrue(PersonCard.isNoteVisible(p));
     }
 }

@@ -39,19 +39,21 @@ public class Messages {
         builder.append(person.getName())
                 .append("; Phone: ")
                 .append(person.getPhone());
-        // Email (optional)
+
         if (person.getEmail() != null) {
             builder.append("; Email: ").append(person.getEmail());
         }
 
-        // Address (optional)
         if (person.getAddress() != null) {
             builder.append("; Address: ").append(person.getAddress());
         }
 
-        // Company (optional)
         if (person.getCompany() != null) {
             builder.append("; Company: ").append(person.getCompany());
+        }
+
+        if (person.getNote() != null && !person.getNote().value.equals("-")) {
+            builder.append("; Note: ").append(person.getNote());
         }
 
         builder.append("; Tags: ");

@@ -6,8 +6,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_REMARK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Company;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Note;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
@@ -46,6 +47,7 @@ public class EditCommand extends Command {
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_COMPANY + "COMPANY] "
+            + "[" + PREFIX_REMARK + "NOTE] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
@@ -69,6 +71,7 @@ public class EditCommand extends Command {
         this.index = index;
         this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
     }
+
     /**
      * Executes the edit command: edits the contact at the given index with new details.
      *
@@ -93,7 +96,6 @@ public class EditCommand extends Command {
 
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
-
         List<Person> allPersons = model.getAddressBook().getPersonList();
         for (int i = 0; i < allPersons.size(); i++) {
             if (i == index.getZeroBased()) {
@@ -107,7 +109,7 @@ public class EditCommand extends Command {
         }
 
         model.setPerson(personToEdit, editedPerson);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
 
@@ -129,7 +131,8 @@ public class EditCommand extends Command {
                 updated(editPersonDescriptor.getEmail(), personToEdit.getEmail()),
                 updated(editPersonDescriptor.getAddress(), personToEdit.getAddress()),
                 updated(editPersonDescriptor.getCompany(), personToEdit.getCompany()),
-                updated(editPersonDescriptor.getTags(), personToEdit.getTags())
+                updated(editPersonDescriptor.getTags(), personToEdit.getTags()),
+                updated(editPersonDescriptor.getNote(), personToEdit.getNote())
         );
     }
 
@@ -165,6 +168,7 @@ public class EditCommand extends Command {
         private Email email;
         private Address address;
         private Company company;
+        private Note note;
         private Set<Tag> tags;
 
         public EditPersonDescriptor() {}
@@ -179,6 +183,7 @@ public class EditCommand extends Command {
             setEmail(toCopy.email);
             setAddress(toCopy.address);
             setCompany(toCopy.company);
+            setNote(toCopy.note);
             setTags(toCopy.tags);
         }
 
@@ -186,7 +191,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, company, tags);
+            return CollectionUtil.isAnyNonNull(name, phone, email, address, company, note, tags);
         }
 
         public void setName(Name name) {
@@ -229,6 +234,14 @@ public class EditCommand extends Command {
             return Optional.ofNullable(company);
         }
 
+        public void setNote(Note note) {
+            this.note = note;
+        }
+
+        public Optional<Note> getNote() {
+            return Optional.ofNullable(note);
+        }
+
         /**
          * Sets {@code tags} to this object's {@code tags}.
          * A defensive copy of {@code tags} is used internally.
@@ -262,6 +275,7 @@ public class EditCommand extends Command {
                     && Objects.equals(email, otherEditPersonDescriptor.email)
                     && Objects.equals(address, otherEditPersonDescriptor.address)
                     && Objects.equals(company, otherEditPersonDescriptor.company)
+                    && Objects.equals(note, otherEditPersonDescriptor.note)
                     && Objects.equals(tags, otherEditPersonDescriptor.tags);
         }
 
@@ -273,6 +287,7 @@ public class EditCommand extends Command {
                     .add("email", email)
                     .add("address", address)
                     .add("company", company)
+                    .add("note", note)
                     .add("tags", tags)
                     .toString();
         }
