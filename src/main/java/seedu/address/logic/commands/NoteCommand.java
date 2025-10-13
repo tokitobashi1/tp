@@ -42,7 +42,6 @@ public class NoteCommand extends Command {
     public NoteCommand(Index index, Note note) {
         requireNonNull(index);
         requireNonNull(note);
-
         this.index = index;
         this.note = note;
     }
@@ -57,6 +56,8 @@ public class NoteCommand extends Command {
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
+
+        // Use the note as is; Note class handles EMPTY_NOTE_PLACEHOLDER
         Person editedPerson = new Person(
                 personToEdit.getName(),
                 personToEdit.getPhone(),
@@ -70,17 +71,24 @@ public class NoteCommand extends Command {
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
-        return new CommandResult(generateSuccessMessage(editedPerson));
+        return new CommandResult(generateSuccessMessage(note, editedPerson));
     }
 
     /**
      * Generates a command execution success message based on whether
-     * the note is added to or removed from
-     * {@code personToEdit}.
+     * the note is empty or added.
      */
-    private String generateSuccessMessage(Person personToEdit) {
-        String message = !note.isEmpty() ? MESSAGE_ADD_NOTE_SUCCESS : MESSAGE_DELETE_NOTE_SUCCESS;
-        return String.format(message, Messages.format(personToEdit));
+    private String generateSuccessMessage(Note note, Person person) {
+        String message;
+        if (note.isEmpty()) {
+            message = MESSAGE_DELETE_NOTE_SUCCESS;
+        } else {
+            message = MESSAGE_ADD_NOTE_SUCCESS;
+        }
+
+        // Use Note.toDisplayString() to include timestamp nicely
+        String noteDisplay = person.getNote().toDisplayString();
+        return String.format(message, Messages.format(person) + " [" + noteDisplay + "]");
     }
 
     @Override
@@ -88,12 +96,9 @@ public class NoteCommand extends Command {
         if (other == this) {
             return true;
         }
-
-        // instanceof handles nulls
         if (!(other instanceof NoteCommand)) {
             return false;
         }
-
         NoteCommand otherNoteCommand = (NoteCommand) other;
         return index.equals(otherNoteCommand.index)
                 && note.equals(otherNoteCommand.note);

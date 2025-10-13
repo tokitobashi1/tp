@@ -34,13 +34,16 @@ public class NoteCommandTest {
     @Test
     public void execute_addNoteUnfilteredList_success() {
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Person editedPerson = new PersonBuilder(firstPerson).withNote(NOTE_STUB).build();
 
-        NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, new Note(NOTE_STUB));
+        // Single Note instance
+        Note note = new Note(NOTE_STUB);
+        Person editedPerson = new PersonBuilder(firstPerson).withNoteObject(note).build();
 
+        NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, note);
+
+        // Only test the person name in the success message
         String expectedMessage = String.format(NoteCommand.MESSAGE_ADD_NOTE_SUCCESS,
-                Messages.format(editedPerson));
-
+            Messages.format(editedPerson) + " [" + editedPerson.getNote().toDisplayString() + "]");
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);
 
@@ -50,12 +53,15 @@ public class NoteCommandTest {
     @Test
     public void execute_deleteNoteUnfilteredList_success() {
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Person editedPerson = new PersonBuilder(firstPerson).withNote("-").build();
 
-        NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, new Note("-"));
+        // Clearing note
+        Note note = new Note("-");
+        Person editedPerson = new PersonBuilder(firstPerson).withNoteObject(note).build();
+        NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, note);
 
         String expectedMessage = String.format(NoteCommand.MESSAGE_DELETE_NOTE_SUCCESS,
-                Messages.format(editedPerson));
+                Messages.format(editedPerson) + " [" + editedPerson.getNote().toDisplayString() + "]");
+
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);
@@ -68,16 +74,22 @@ public class NoteCommandTest {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Person editedPerson = new PersonBuilder(model.getFilteredPersonList()
-                .get(INDEX_FIRST_PERSON.getZeroBased())).withNote(NOTE_STUB).build();
 
-        NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, new Note(NOTE_STUB));
+        Note note = new Note(NOTE_STUB);
+        Person editedPerson = new PersonBuilder(firstPerson).withNoteObject(note).build();
+        NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, note);
 
         String expectedMessage = String.format(NoteCommand.MESSAGE_ADD_NOTE_SUCCESS,
-                Messages.format(editedPerson));
+                Messages.format(editedPerson) + " [" + editedPerson.getNote().toDisplayString() + "]");
+
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(firstPerson, editedPerson);
+
+        Person personInExpectedModel = expectedModel.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        expectedModel.setPerson(personInExpectedModel, editedPerson);
+
+        expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
 
         assertCommandSuccess(noteCommand, model, expectedMessage, expectedModel);
     }
@@ -90,15 +102,10 @@ public class NoteCommandTest {
         assertCommandFailure(noteCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
 
-    /**
-     * Edit filtered list where index is larger than size of filtered list,
-     * but smaller than size of address book
-     */
     @Test
     public void execute_invalidPersonIndexFilteredList_failure() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
         Index outOfBoundIndex = INDEX_SECOND_PERSON;
-        // ensures that outOfBoundIndex is still in bounds of address book list
         assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
 
         NoteCommand noteCommand = new NoteCommand(outOfBoundIndex, new Note(NOTE_STUB));

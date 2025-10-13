@@ -3,6 +3,7 @@ package seedu.address.ui;
 import java.util.Comparator;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -35,49 +36,98 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label note;
     @FXML
+    private Label noteTimestamp;
+    @FXML
+    private Button showNoteTimeButton;
+    @FXML
     private FlowPane tags;
 
     /**
-     * Creates a {@code PersonCard} with the given {@code Person} and index to display.
-     */
+    * Creates a {@code PersonCard} with the given {@code Person} to display and
+    * the displayed index in the list.
+    *
+    * @param person The person whose information is to be displayed.
+    * @param displayedIndex The index to display alongside the person in the UI list.
+    */
     public PersonCard(Person person, int displayedIndex) {
         super(FXML);
         this.person = person;
 
-        // Create view model to handle presentation logic
         PersonCardViewModel viewModel = new PersonCardViewModel(person, displayedIndex);
 
-        // Set required fields
         id.setText(viewModel.getIdText());
         name.setText(viewModel.getNameText());
         phone.setText(viewModel.getPhoneText());
 
-        // Set optional address field
+        // Address
         address.setText(viewModel.getAddressText());
         address.setVisible(viewModel.isAddressVisible());
         address.setManaged(viewModel.isAddressVisible());
 
-        // Set optional email field
+        // Email
         email.setText(viewModel.getEmailText());
         email.setVisible(viewModel.isEmailVisible());
         email.setManaged(viewModel.isEmailVisible());
 
-        // Set optional company field
+        // Company
         company.setText(viewModel.getCompanyText());
         company.setVisible(viewModel.isCompanyVisible());
         company.setManaged(viewModel.isCompanyVisible());
 
-        // Set optional note field
+        // Note
         note.setText(viewModel.getNoteText());
-        note.setVisible(viewModel.isNoteVisible());
-        note.setManaged(viewModel.isNoteVisible());
+        boolean hasNote = viewModel.isNoteVisible();
+        note.setVisible(hasNote);
+        note.setManaged(hasNote);
 
-        // Set tags
+        // Note timestamp (hidden by default)
+        boolean hasTimestamp = person.getNote() != null
+                && !person.getNote().isEmpty()
+                && person.getNote().getLastEdited() != null;
+        if (hasTimestamp) {
+            noteTimestamp.setText("Last edited: " + person.getNote().getFormattedLastEdited());
+        } else {
+            noteTimestamp.setText(""); // no note timestamp
+        }
+        noteTimestamp.setVisible(false);
+        noteTimestamp.setManaged(false);
+
+        // Show Note Button: always present but semi-hidden if no note
+        showNoteTimeButton.setOpacity(0); // hidden by default
+        showNoteTimeButton.setMouseTransparent(true); // cannot be clicked if opacity 0
+        if (hasNote) {
+            showNoteTimeButton.setOpacity(1); // fully visible if there’s a note
+            showNoteTimeButton.setMouseTransparent(false);
+        }
+
+        // Show button on hover
+        cardPane.setOnMouseEntered(e -> showNoteTimeButton.setOpacity(1));
+        cardPane.setOnMouseExited(e -> {
+            if (!hasNote) {
+                showNoteTimeButton.setOpacity(0);
+            }
+        });
+
+        // Tags
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
 
+    /**
+     * Handles showing or hiding the note timestamp when the user clicks the button.
+     */
+    @FXML
+    void handleShowNoteTime() {
+        if (note.getText().isEmpty()) {
+            return; // do nothing if no note
+        }
+        boolean visible = !noteTimestamp.isVisible();
+        noteTimestamp.setVisible(visible);
+        noteTimestamp.setManaged(visible);
+    }
+
+    // Helpers (unchanged)
     static String getAddressText(Person person) {
         return person.getAddress() != null ? person.getAddress().value : "";
     }
@@ -110,5 +160,14 @@ public class PersonCard extends UiPart<Region> {
 
     static boolean isNoteVisible(Person person) {
         return person.getNote() != null && !person.getNote().isEmpty();
+    }
+
+    // For testing only
+    Label getNoteTimestampForTest() {
+        return noteTimestamp;
+    }
+
+    void callHandleShowNoteTimeForTest() {
+        handleShowNoteTime();
     }
 }
