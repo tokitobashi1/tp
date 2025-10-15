@@ -116,11 +116,5 @@ public class PersonBuilder {
     public Person build() {
         return new Person(name, phone, email, address, company, tags, note);
     }
-    /**
-    * Sets the Note of the person being built to the given Note object.
-    */
-    public PersonBuilder withNoteObject(Note note) {
-        this.note = note;
-        return this;
-    }
+
 }
