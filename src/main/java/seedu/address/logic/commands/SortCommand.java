@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Comparator;
 
-import seedu.address.logic.Messages;
 import seedu.address.logic.parser.SortKeys;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;

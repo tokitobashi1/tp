@@ -1,5 +1,9 @@
 package seedu.address.logic.parser;
 
+/**
+ * Enumeration of keys to sort contacts by.
+ * Used by SortCommand and SortCommandParser.
+ */
 public enum SortKeys {
     NAME("name"),
     PHONE("number"),
