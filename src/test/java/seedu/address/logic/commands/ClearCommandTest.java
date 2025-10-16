@@ -1,5 +1,7 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
@@ -17,7 +19,7 @@ public class ClearCommandTest {
         Model model = new ModelManager();
         Model expectedModel = new ModelManager();
 
-        assertCommandSuccess(new ClearCommand(), model, ClearCommand.MESSAGE_SUCCESS, expectedModel);
+        assertCommandSuccess(new ClearCommand(true), model, ClearCommand.MESSAGE_SUCCESS, expectedModel);
     }
 
     @Test
@@ -26,7 +28,21 @@ public class ClearCommandTest {
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         expectedModel.setAddressBook(new AddressBook());
 
-        assertCommandSuccess(new ClearCommand(), model, ClearCommand.MESSAGE_SUCCESS, expectedModel);
+        assertCommandSuccess(new ClearCommand(true), model, ClearCommand.MESSAGE_SUCCESS, expectedModel);
     }
 
+    @Test
+    public void execute_withoutConfirmation_showsWarning() {
+        Model model = new ModelManager();
+        CommandResult result = new ClearCommand(false).execute(model);
+        assertEquals(ClearCommand.MESSAGE_CONFIRMATION_REQUIRED, result.getFeedbackToUser());
+    }
+
+    @Test
+    public void execute_withConfirmation_clearsSuccessfully() {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        CommandResult result = new ClearCommand(true).execute(model);
+        assertEquals(ClearCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+        assertTrue(model.getAddressBook().getPersonList().isEmpty());
+    }
 }

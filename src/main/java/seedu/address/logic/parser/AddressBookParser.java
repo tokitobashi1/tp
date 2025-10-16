@@ -62,7 +62,9 @@ public class AddressBookParser {
             return new DeleteCommandParser().parse(arguments);
 
         case ClearCommand.COMMAND_WORD:
-            return new ClearCommand();
+            String trimmedArgs = arguments.trim();
+            boolean isConfirmed = trimmedArgs.equals(ClearCommand.CONFIRMATION_KEYWORD);
+            return new ClearCommand(isConfirmed);
 
         case FindCommand.COMMAND_WORD:
             return new FindCommandParser().parse(arguments);
