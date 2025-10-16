@@ -38,8 +38,10 @@ public class NoteCommandTest {
 
         NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, new Note(NOTE_STUB));
 
+        // <-- UPDATED: include note display appended like NoteCommand originally did
+        String noteDisplay = editedPerson.getNote().toDisplayString();
         String expectedMessage = String.format(NoteCommand.MESSAGE_ADD_NOTE_SUCCESS,
-                Messages.format(editedPerson));
+                Messages.format(editedPerson) + " [" + noteDisplay + "]");
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);
@@ -54,8 +56,10 @@ public class NoteCommandTest {
 
         NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, new Note("-"));
 
+        // <-- UPDATED: include note display appended
+        String noteDisplay = editedPerson.getNote().toDisplayString();
         String expectedMessage = String.format(NoteCommand.MESSAGE_DELETE_NOTE_SUCCESS,
-                Messages.format(editedPerson));
+                Messages.format(editedPerson) + " [" + noteDisplay + "]");
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);
@@ -73,8 +77,10 @@ public class NoteCommandTest {
 
         NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, new Note(NOTE_STUB));
 
+        // <-- UPDATED: include note display appended
+        String noteDisplay = editedPerson.getNote().toDisplayString();
         String expectedMessage = String.format(NoteCommand.MESSAGE_ADD_NOTE_SUCCESS,
-                Messages.format(editedPerson));
+                Messages.format(editedPerson) + " [" + noteDisplay + "]");
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);
