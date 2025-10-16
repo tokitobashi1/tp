@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.parser.SortKeys;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -22,37 +23,120 @@ public class SortCommandTest {
 
     @Test
     public void execute_nullModel_throwsNullPointerException() {
-        SortCommand sortCommand = new SortCommand();
+        SortCommand sortCommand = new SortCommand(SortKeys.NAME);
         assertThrows(NullPointerException.class, () -> sortCommand.execute(null));
     }
 
     @Test
     public void execute_sortByName_andReturnsMessage() {
-        // Arrange: typical address book + two extra persons intentionally added in reverse order
         AddressBook addressBook = getTypicalAddressBook();
         Model model = new ModelManager(addressBook, new UserPrefs());
 
         Person amy = new PersonBuilder().withName("Amy Bee").build();
-        Person zoe = new PersonBuilder().withName("zoe zebra").build(); // lower-case to test case-insensitive compare
+        Person zoe = new PersonBuilder().withName("zoe zebra").build();
 
-        // Add in reverse order to ensure sorting actually reorders them
         model.addPerson(zoe);
         model.addPerson(amy);
 
-        // Capture the list before sorting (copy for later comparison)
         List<Person> before = new ArrayList<>(model.getFilteredPersonList());
 
-        // Act
-        SortCommand sortCommand = new SortCommand();
+        SortCommand sortCommand = new SortCommand(SortKeys.NAME);
         CommandResult result = sortCommand.execute(model);
 
-        // Assert: message
-        assertEquals(SortCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+        String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.NAME.getDisplayName());
+        assertEquals(successMessage, result.getFeedbackToUser());
 
-        // Assert: list is sorted alphabetically by name, case-insensitive
         List<Person> after = new ArrayList<>(model.getFilteredPersonList());
         List<Person> expected = new ArrayList<>(before);
         expected.sort(Comparator.comparing(p -> p.getName().fullName.toLowerCase()));
+
+        assertEquals(expected, after);
+    }
+
+    @Test
+    public void execute_sortByPhone_sortsAscending() {
+        AddressBook ab = getTypicalAddressBook();
+        Model model = new ModelManager(ab, new UserPrefs());
+
+        List<Person> before = new ArrayList<>(model.getFilteredPersonList());
+
+        SortCommand sortCommand = new SortCommand(SortKeys.PHONE);
+        CommandResult result = sortCommand.execute(model);
+
+        String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.PHONE.getDisplayName());
+        assertEquals(successMessage, result.getFeedbackToUser());
+
+        List<Person> after = new ArrayList<>(model.getFilteredPersonList());
+        List<Person> expected = new ArrayList<>(before);
+        expected.sort(Comparator.comparing(p -> p.getPhone().value));
+
+        assertEquals(expected, after);
+    }
+
+    @Test
+    public void execute_sortByEmail_sortsAscendingCaseInsensitive() {
+        AddressBook ab = getTypicalAddressBook();
+        Model model = new ModelManager(ab, new UserPrefs());
+
+        List<Person> before = new ArrayList<>(model.getFilteredPersonList());
+
+        SortCommand sortCommand = new SortCommand(SortKeys.EMAIL);
+        CommandResult result = sortCommand.execute(model);
+
+        String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.EMAIL.getDisplayName());
+        assertEquals(successMessage, result.getFeedbackToUser());
+
+        List<Person> after = new ArrayList<>(model.getFilteredPersonList());
+        List<Person> expected = new ArrayList<>(before);
+        expected.sort(Comparator.comparing(p -> p.getEmail().value.toLowerCase()));
+
+        assertEquals(expected, after);
+    }
+
+    @Test
+    public void execute_sortByAddress_sortsAscendingCaseInsensitive() {
+        AddressBook ab = getTypicalAddressBook();
+        Model model = new ModelManager(ab, new UserPrefs());
+
+        List<Person> before = new ArrayList<>(model.getFilteredPersonList());
+
+        SortCommand sortCommand = new SortCommand(SortKeys.ADDRESS);
+        CommandResult result = sortCommand.execute(model);
+
+        String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.ADDRESS.getDisplayName());
+        assertEquals(successMessage, result.getFeedbackToUser());
+
+        List<Person> after = new ArrayList<>(model.getFilteredPersonList());
+        List<Person> expected = new ArrayList<>(before);
+        expected.sort(Comparator.comparing(p -> p.getAddress().value.toLowerCase()));
+
+        assertEquals(expected, after);
+    }
+
+    @Test
+    public void execute_sortByTag_sortsByFirstTagCaseInsensitive() {
+        AddressBook ab = getTypicalAddressBook();
+        Model model = new ModelManager(ab, new UserPrefs());
+
+        List<Person> before = new ArrayList<>(model.getFilteredPersonList());
+
+        SortCommand sortCommand = new SortCommand(SortKeys.TAG);
+        CommandResult result = sortCommand.execute(model);
+
+        String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.TAG.getDisplayName());
+        assertEquals(successMessage, result.getFeedbackToUser());
+
+        List<Person> after = new ArrayList<>(model.getFilteredPersonList());
+        List<Person> expected = new ArrayList<>(before);
+
+        // Expected: sort by lexicographically smallest tag (case-insensitive). If no tags, treat as "".
+        expected.sort(Comparator.comparing(p ->
+                p.getTags().stream()
+                        .map(tag -> tag.tagName.toLowerCase())
+                        .sorted()
+                        .findFirst()
+                        .orElse("")
+        ));
 
         assertEquals(expected, after);
     }
