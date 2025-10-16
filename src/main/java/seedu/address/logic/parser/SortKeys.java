@@ -2,7 +2,7 @@ package seedu.address.logic.parser;
 
 public enum SortKeys {
     NAME("name"),
-    PHONE("number"), 
+    PHONE("number"),
     EMAIL("email"),
     ADDRESS("address"),
     TAG("tag");
