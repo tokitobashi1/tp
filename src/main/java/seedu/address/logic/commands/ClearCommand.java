@@ -18,7 +18,7 @@ public class ClearCommand extends Command {
                     + "To proceed, type: clear " + CONFIRMATION_KEYWORD;
 
     public static final String MESSAGE_CONFIRMATION_REQUIRED =
-            "⚠️  This will delete ALL contacts!\n"
+            "⚠This will delete ALL contacts!\n"
                     + "Please confirm by typing: clear " + CONFIRMATION_KEYWORD;
 
     public static final String MESSAGE_SUCCESS = "Address book has been cleared!";
