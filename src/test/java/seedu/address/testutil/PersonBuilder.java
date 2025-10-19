@@ -10,6 +10,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Note;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Priority;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
@@ -29,6 +30,7 @@ public class PersonBuilder {
     private Address address;
     private Company company;
     private Note note;
+    private Priority priority;
     private Set<Tag> tags;
 
     /**
@@ -41,6 +43,7 @@ public class PersonBuilder {
         address = new Address(DEFAULT_ADDRESS);
         company = null;
         note = null;
+        priority = null;
         tags = new HashSet<>();
     }
 
@@ -54,6 +57,7 @@ public class PersonBuilder {
         address = personToCopy.getAddress();
         company = personToCopy.getCompany();
         note = personToCopy.getNote();
+        priority = personToCopy.getPriority();
         tags = new HashSet<>(personToCopy.getTags());
     }
 
@@ -113,8 +117,16 @@ public class PersonBuilder {
         return this;
     }
 
+    /**
+     * Sets the {@code Priority} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withPriority(String priority) {
+        this.priority = priority != null ? new Priority(priority) : null;
+        return this;
+    }
+
     public Person build() {
-        return new Person(name, phone, email, address, company, tags, note);
+        return new Person(name, phone, email, address, company, tags, note, priority);
     }
 
 }
