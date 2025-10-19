@@ -90,6 +90,22 @@ public class AddCommandTest {
      */
     private class ModelStub implements Model {
         @Override
+        public void commitAddressBook() {
+        }
+
+        @Override
+        public boolean canUndoAddressBook() {
+            return false;
+        }
+
+
+        @Override
+        public void undoAddressBook() {
+            throw new AssertionError("This method should not be called in this test.");
+        }
+
+
+        @Override
         public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
             throw new AssertionError("This method should not be called.");
         }

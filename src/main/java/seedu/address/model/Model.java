@@ -16,6 +16,23 @@ public interface Model {
     Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = unused -> true;
 
     /**
+     * Save the current state of the address book for undo/redo history.
+     */
+    void commitAddressBook();
+
+    /**
+     * Returns true if there is a previous state to undo to.
+     */
+    boolean canUndoAddressBook();
+
+    /**
+     * Reverts the model's address book to the previous committed state.
+     */
+    void undoAddressBook();
+
+
+
+    /**
      * Replaces user prefs data with the data in {@code userPrefs}.
      */
     void setUserPrefs(ReadOnlyUserPrefs userPrefs);
