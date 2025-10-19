@@ -100,12 +100,14 @@ public class EditCommand extends Command {
 
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
+        // Check for duplicates by comparing against all persons in the address book
         List<Person> allPersons = model.getAddressBook().getPersonList();
-        for (int i = 0; i < allPersons.size(); i++) {
-            if (i == index.getZeroBased()) {
+        for (Person p : allPersons) {
+            // Skip the person being edited
+            if (p.equals(personToEdit)) {
                 continue;
             }
-            Person p = allPersons.get(i);
+            // Check if any other person has the same name and phone
             if (p.getName().equals(editedPerson.getName())
                     && p.getPhone().equals(editedPerson.getPhone())) {
                 throw new CommandException(MESSAGE_DUPLICATE_PERSON);
@@ -174,8 +176,8 @@ public class EditCommand extends Command {
         private Address address;
         private Company company;
         private Note note;
-        private Set<Tag> tags;
         private Priority priority;
+        private Set<Tag> tags;
 
         public EditPersonDescriptor() {}
 
@@ -249,6 +251,14 @@ public class EditCommand extends Command {
             return Optional.ofNullable(note);
         }
 
+        public void setPriority(Priority priority) {
+            this.priority = priority;
+        }
+
+        public Optional<Priority> getPriority() {
+            return Optional.ofNullable(priority);
+        }
+
         /**
          * Sets {@code tags} to this object's {@code tags}.
          * A defensive copy of {@code tags} is used internally.
@@ -264,14 +274,6 @@ public class EditCommand extends Command {
          */
         public Optional<Set<Tag>> getTags() {
             return (tags != null) ? Optional.of(Collections.unmodifiableSet(tags)) : Optional.empty();
-        }
-
-        public void setPriority(Priority priority) {
-            this.priority = priority;
-        }
-
-        public Optional<Priority> getPriority() {
-            return Optional.ofNullable(priority);
         }
 
         @Override
