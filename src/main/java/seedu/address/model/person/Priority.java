@@ -12,10 +12,13 @@ public class Priority {
     public static final String MESSAGE_CONSTRAINTS =
             "Priority should be one of: HIGH, MEDIUM, LOW (case-insensitive), or 1-5 where 1=HIGH, 3=MEDIUM, 5=LOW";
 
+    /**
+     * Represents the priority level of a person.
+     */
     public enum Level {
-        HIGH(1, "HIGH", "#ff4444"),      // Red
-        MEDIUM(3, "MEDIUM", "#ffbb33"),  // Orange
-        LOW(5, "LOW", "#00C851");        // Green
+        HIGH(1, "HIGH", "#ff4444"),
+        MEDIUM(3, "MEDIUM", "#ffbb33"),
+        LOW(5, "LOW", "#00C851");
 
         private final int numericValue;
         private final String displayName;
