@@ -36,6 +36,7 @@ public class ClearCommand extends Command {
             return new CommandResult(MESSAGE_CONFIRMATION_REQUIRED);
         }
         model.setAddressBook(new AddressBook());
+        model.commitAddressBook();
         return new CommandResult(MESSAGE_SUCCESS);
     }
 

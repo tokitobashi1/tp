@@ -46,7 +46,12 @@ public class NoteCommandTest {
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);
 
+        assertFalse(model.canUndoAddressBook());
+
         assertCommandSuccess(noteCommand, model, expectedMessage, expectedModel);
+
+        assertTrue(model.canUndoAddressBook());
+
     }
 
     @Test
@@ -63,8 +68,14 @@ public class NoteCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);
+        // should not have undo history before the command commits
+        assertFalse(model.canUndoAddressBook());
 
         assertCommandSuccess(noteCommand, model, expectedMessage, expectedModel);
+
+        // NoteCommand mutates model and must create a commit for undo/redo
+        assertTrue(model.canUndoAddressBook());
+
     }
 
     @Test
@@ -84,8 +95,12 @@ public class NoteCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);
+        assertFalse(model.canUndoAddressBook());
 
         assertCommandSuccess(noteCommand, model, expectedMessage, expectedModel);
+
+        assertTrue(model.canUndoAddressBook());
+
     }
 
     @Test

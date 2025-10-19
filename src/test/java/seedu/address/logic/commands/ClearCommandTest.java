@@ -14,6 +14,7 @@ import seedu.address.model.UserPrefs;
 
 public class ClearCommandTest {
 
+
     @Test
     public void execute_emptyAddressBook_success() {
         Model model = new ModelManager();
