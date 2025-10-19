@@ -12,48 +12,56 @@
 
 <HBox fx:id="cardPane"
       xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1">
+      xmlns:fx="http://javafx.com/fxml/1"
+      style="-fx-border-radius: 12; 
+             -fx-background-radius: 12; 
+             -fx-padding: 12 16 12 16;
+             -fx-border-color: #ddd;
+             -fx-border-width: 1;">
+
   <GridPane HBox.hgrow="ALWAYS">
     <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="150" />
     </columnConstraints>
 
-    <VBox alignment="CENTER_LEFT" minHeight="105" spacing="3" GridPane.columnIndex="0">
+    <VBox alignment="TOP_LEFT" spacing="8" GridPane.columnIndex="0">
       <padding>
-        <Insets top="5" right="5" bottom="5" left="15" />
+        <Insets top="6" right="6" bottom="6" left="15" />
       </padding>
 
       <!-- Name + ID -->
-      <HBox spacing="4" alignment="CENTER_LEFT">
-        <Label fx:id="id" styleClass="cell_big_label">
+      <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label fx:id="id" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: white;">
           <minWidth>
             <Region fx:constant="USE_PREF_SIZE" />
           </minWidth>
         </Label>
-        <Label fx:id="name" text="$first" styleClass="cell_big_label" />
+        <Label fx:id="name" text="$first" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: white;" />
       </HBox>
 
       <!-- Tags -->
-      <FlowPane fx:id="tags" hgap="4" vgap="2" />
+      <FlowPane fx:id="tags" hgap="6" vgap="4" style="-fx-background-color: transparent;"/>
 
       <!-- Details -->
-      <Label fx:id="phone" styleClass="cell_small_label" text="$phone" />
-      <Label fx:id="address" styleClass="cell_small_label" text="$address" />
-      <Label fx:id="email" styleClass="cell_small_label" text="$email" />
-      <Label fx:id="company" styleClass="cell_small_label" text="$company" />
+      <Label fx:id="phone" style="-fx-font-size: 13px; -fx-text-fill: white;" text="$phone" />
+      <Label fx:id="address" style="-fx-font-size: 13px; -fx-text-fill: white;" text="$address" />
+      <Label fx:id="email" style="-fx-font-size: 13px; -fx-text-fill: white;" text="$email" />
+      <Label fx:id="company" style="-fx-font-size: 13px; -fx-text-fill: white;" text="$company" />
 
-      <!-- Note + Timestamp Button -->
-      <HBox spacing="6" alignment="CENTER_LEFT">
-        <Label fx:id="note" styleClass="cell_small_label" text="$note" wrapText="true" maxWidth="400" />
+      <!-- Note + Timestamp -->
+      <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="note" style="-fx-font-size: 13px; -fx-text-fill: white;" text="$note" wrapText="true" maxWidth="400" />
+
         <HBox spacing="4" alignment="CENTER_LEFT">
-          <!-- Timestamp icon & label -->
+          <!-- Clock icon -->
           <Label fx:id="timestampIcon"
                  text="🕒"
-                 styleClass="cell_tiny_label"
+                 style="-fx-font-size: 12px; -fx-text-fill: white;"
                  visible="false"
                  managed="false" />
+
           <Label fx:id="noteTimestamp"
-                 styleClass="cell_tiny_label"
+                 style="-fx-font-size: 12px; -fx-text-fill: white;"
                  visible="false"
                  managed="false" />
 
@@ -63,9 +71,9 @@
                   style="-fx-background-color: transparent;
                          -fx-cursor: hand;
                          -fx-font-size: 12px;
+                         -fx-text-fill: white;
                          -fx-padding: 0;"
-                  onAction="#handleShowNoteTime"
-                  opacity="0" />
+                  onAction="#handleShowNoteTime" />
         </HBox>
       </HBox>
 
