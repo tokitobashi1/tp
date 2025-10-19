@@ -78,6 +78,14 @@ public class NameContainsKeywordsPredicate implements java.util.function.Predica
             return true;
         }
 
+        // Priority
+        if (person.getPriority() != null) {
+            String priorityString = person.getPriority().toString();
+            if (SearchUtil.containsSubstringIgnoreCase(priorityString, keyword)) {
+                return true;
+            }
+        }
+
         // Tags (any tag containing the substring)
         Set<Tag> tags = person.getTags();
         if (tags != null && tags.stream()

@@ -46,6 +46,10 @@ public class SortCommand extends Command {
                     .map(tag -> tag.tagName)
                     .sorted(String.CASE_INSENSITIVE_ORDER)
                     .findFirst().orElse(""));
+        case PRIORITY:
+            return java.util.Comparator.comparing(p -> p.getPriority() != null
+                    ? p.getPriority().getLevel().getNumericValue()
+                    : Integer.MAX_VALUE);
         default:
             throw new IllegalArgumentException("Unsupported sort key: " + f);
         }

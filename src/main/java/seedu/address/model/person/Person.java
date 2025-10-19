@@ -25,19 +25,28 @@ public class Person {
     private final Address address;
     private final Company company;
     private final Note note;
+    private final Priority priority;
     private final Set<Tag> tags = new HashSet<>();
 
     /**
-     * Every field must be present and not null except email, address, company, and note.
+     * Every field must be present and not null except email, address, company, note, and priority.
      */
     public Person(Name name, Phone phone, Email email, Address address, Company company, Set<Tag> tags) {
-        this(name, phone, email, address, company, tags, null);
+        this(name, phone, email, address, company, tags, null, null);
     }
 
     /**
-     * Every field must be present and not null except email, address, company, and note.
+     * Every field must be present and not null except email, address, company, note, and priority.
      */
     public Person(Name name, Phone phone, Email email, Address address, Company company, Set<Tag> tags, Note note) {
+        this(name, phone, email, address, company, tags, note, null);
+    }
+
+    /**
+     * Every field must be present and not null except email, address, company, note, and priority.
+     */
+    public Person(Name name, Phone phone, Email email, Address address, Company company,
+                  Set<Tag> tags, Note note, Priority priority) {
         requireAllNonNull(name, phone, tags);
         this.name = name;
         this.phone = phone;
@@ -45,6 +54,7 @@ public class Person {
         this.address = address;
         this.company = company;
         this.note = note;
+        this.priority = priority;
         this.tags.addAll(tags);
     }
 
@@ -70,6 +80,10 @@ public class Person {
 
     public Note getNote() {
         return note;
+    }
+
+    public Priority getPriority() {
+        return priority;
     }
 
     /**
@@ -116,12 +130,13 @@ public class Person {
                 && Objects.equals(address, otherPerson.address)
                 && Objects.equals(company, otherPerson.company)
                 && Objects.equals(note, otherPerson.note)
+                && Objects.equals(priority, otherPerson.priority)
                 && tags.equals(otherPerson.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, phone, email, address, company, note, tags);
+        return Objects.hash(name, phone, email, address, company, note, priority, tags);
     }
 
     @Override
@@ -133,6 +148,7 @@ public class Person {
                 .add("address", address)
                 .add("company", company)
                 .add("note", note)
+                .add("priority", priority)
                 .add("tags", tags)
                 .toString();
     }

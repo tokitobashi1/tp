@@ -39,6 +39,11 @@
         <Label fx:id="name" text="$first" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: white;" />
       </HBox>
 
+      <!-- Priority Badge -->
+      <Label fx:id="priority"
+             style="-fx-font-size: 11px; -fx-font-weight: bold;"
+             wrapText="false" />
+
       <!-- Tags -->
       <FlowPane fx:id="tags" hgap="6" vgap="4" style="-fx-background-color: transparent;"/>
 
