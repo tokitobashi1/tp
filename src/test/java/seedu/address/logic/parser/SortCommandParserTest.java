@@ -31,10 +31,21 @@ public class SortCommandParserTest {
 
     @Test
     public void parse_withArgs_failure() {
-        String expected = String.format(MESSAGE_INVALID_SORT_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE);
-        assertParseFailure(parser, " number", expected);
-        assertParseFailure(parser, " desc", expected);
-        assertParseFailure(parser, " n/ e/", expected);
-        assertParseFailure(parser, " foo bar", expected);
+        // Test invalid sort keys
+        assertParseFailure(parser, " number", String.format(MESSAGE_INVALID_SORT_COMMAND_FORMAT, "number"));
+        assertParseFailure(parser, " desc", String.format(MESSAGE_INVALID_SORT_COMMAND_FORMAT, "desc"));
+        assertParseFailure(parser, " n/ e/", String.format(MESSAGE_INVALID_SORT_COMMAND_FORMAT, "n/ e/"));
+        assertParseFailure(parser, " foo bar", String.format(MESSAGE_INVALID_SORT_COMMAND_FORMAT, "foo bar"));
+    }
+
+    @Test
+    public void parse_validSortKeys_success() {
+        // Test all valid sort keys
+        assertParseSuccess(parser, "name", new SortCommand(SortKeys.NAME));
+        assertParseSuccess(parser, "phone", new SortCommand(SortKeys.PHONE));
+        assertParseSuccess(parser, "email", new SortCommand(SortKeys.EMAIL));
+        assertParseSuccess(parser, "address", new SortCommand(SortKeys.ADDRESS));
+        assertParseSuccess(parser, "tag", new SortCommand(SortKeys.TAG));
+        assertParseSuccess(parser, "priority", new SortCommand(SortKeys.PRIORITY));
     }
 }

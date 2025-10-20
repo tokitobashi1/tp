@@ -9,7 +9,8 @@ public enum SortKeys {
     PHONE("number"),
     EMAIL("email"),
     ADDRESS("address"),
-    TAG("tag");
+    TAG("tag"),
+    PRIORITY("priority");
 
     private final String displayName;
 

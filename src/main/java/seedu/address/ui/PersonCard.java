@@ -41,6 +41,8 @@ public class PersonCard extends UiPart<Region> {
     private Button showNoteTimeButton;
     @FXML
     private FlowPane tags;
+    @FXML
+    private Label priority;
 
     /**
     * Creates a {@code PersonCard} with the given {@code Person} to display and
@@ -112,6 +114,17 @@ public class PersonCard extends UiPart<Region> {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+
+        priority.setText(viewModel.getPriorityText());
+        priority.setVisible(viewModel.isPriorityVisible());
+        priority.setManaged(viewModel.isPriorityVisible());
+        if (viewModel.isPriorityVisible()) {
+            priority.setStyle("-fx-background-color: " + viewModel.getPriorityColor() + ";"
+                    + "-fx-text-fill: white;"
+                    + "-fx-padding: 2 6 2 6;"
+                    + "-fx-background-radius: 3;");
+        }
+
     }
 
     /**

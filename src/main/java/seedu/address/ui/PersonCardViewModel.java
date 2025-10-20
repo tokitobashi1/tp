@@ -31,6 +31,10 @@ public class PersonCardViewModel {
 
     private final String tagsText;
 
+    private final String priorityText;
+    private final boolean priorityVisible;
+    private final String priorityColor;
+
     /**
      * Constructs a {@code PersonCardViewModel} with information extracted from a {@code Person}.
      *
@@ -84,6 +88,17 @@ public class PersonCardViewModel {
                 .map(tag -> tag.tagName)
                 .sorted()
                 .collect(Collectors.joining(", "));
+
+        if (person.getPriority() != null) {
+            this.priorityText = person.getPriority().getSymbol() + " " + person.getPriority().toString();
+            this.priorityVisible = true;
+            this.priorityColor = person.getPriority().getLevel().getColorHex();
+        } else {
+            this.priorityText = "";
+            this.priorityVisible = false;
+            this.priorityColor = "";
+        }
+
     }
 
     // Getters for tests to assert values
@@ -135,4 +150,17 @@ public class PersonCardViewModel {
     public String getTagsText() {
         return tagsText;
     }
+
+    public String getPriorityText() {
+        return priorityText;
+    }
+
+    public boolean isPriorityVisible() {
+        return priorityVisible;
+    }
+
+    public String getPriorityColor() {
+        return priorityColor;
+    }
+
 }

@@ -20,6 +20,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Note;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Priority;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -38,8 +39,8 @@ class JsonAdaptedPerson {
     private final String company;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
     private final String note;
-    // New field: stores ISO timestamp string of note.lastEdited (nullable)
     private final String noteLastEdited;
+    private final String priority;
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -49,7 +50,8 @@ class JsonAdaptedPerson {
                              @JsonProperty("email") String email, @JsonProperty("address") String address,
                              @JsonProperty("company") String company, @JsonProperty("tags") List<JsonAdaptedTag> tags,
                              @JsonProperty("note") String note,
-                             @JsonProperty("noteLastEdited") String noteLastEdited) {
+                             @JsonProperty("noteLastEdited") String noteLastEdited,
+                             @JsonProperty("priority") String priority) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -60,6 +62,7 @@ class JsonAdaptedPerson {
         }
         this.note = note;
         this.noteLastEdited = noteLastEdited;
+        this.priority = priority;
     }
 
     /**
@@ -75,10 +78,10 @@ class JsonAdaptedPerson {
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
         note = source.getNote() != null ? source.getNote().value : null;
-        // store lastEdited as ISO string if present, else null
         noteLastEdited = (source.getNote() != null && source.getNote().getLastEdited() != null)
                 ? source.getNote().getLastEdited().format(ISO_FORMAT)
                 : null;
+        priority = source.getPriority() != null ? source.getPriority().toString() : null;
     }
 
     /**
@@ -93,7 +96,8 @@ class JsonAdaptedPerson {
         }
 
         if (name == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    Name.class.getSimpleName()));
         }
         if (!Name.isValidName(name)) {
             throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
@@ -101,7 +105,8 @@ class JsonAdaptedPerson {
         final Name modelName = new Name(name);
 
         if (phone == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    Phone.class.getSimpleName()));
         }
         if (!Phone.isValidPhone(phone)) {
             throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
@@ -161,7 +166,20 @@ class JsonAdaptedPerson {
         } else {
             modelNote = null;
         }
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelCompany, modelTags, modelNote);
+
+        // Priority is optional
+        final Priority modelPriority;
+        if (priority != null && !priority.trim().isEmpty()) {
+            if (!Priority.isValidPriority(priority)) {
+                throw new IllegalValueException(Priority.MESSAGE_CONSTRAINTS);
+            }
+            modelPriority = new Priority(priority);
+        } else {
+            modelPriority = null;
+        }
+
+        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelCompany,
+                modelTags, modelNote, modelPriority);
     }
 
 }

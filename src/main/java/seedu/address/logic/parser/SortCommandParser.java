@@ -26,6 +26,7 @@ public class SortCommandParser implements Parser<SortCommand> {
         case "email": return SortKeys.EMAIL;
         case "address": return SortKeys.ADDRESS;
         case "tag": return SortKeys.TAG;
+        case "priority": return SortKeys.PRIORITY;
         default:
             throw new ParseException(String.format(MESSAGE_INVALID_SORT_COMMAND_FORMAT, raw));
         }

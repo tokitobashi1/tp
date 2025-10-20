@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_REMARK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
@@ -29,6 +30,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Note;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Priority;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -48,9 +50,11 @@ public class EditCommand extends Command {
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_COMPANY + "COMPANY] "
             + "[" + PREFIX_REMARK + "NOTE] "
+            + "[" + PREFIX_PRIORITY + "PRIORITY] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
+            + PREFIX_PRIORITY + "HIGH "
             + PREFIX_EMAIL + "johndoe@example.com";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Contact: %1$s";
@@ -96,12 +100,14 @@ public class EditCommand extends Command {
 
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
+        // Check for duplicates by comparing against all persons in the address book
         List<Person> allPersons = model.getAddressBook().getPersonList();
-        for (int i = 0; i < allPersons.size(); i++) {
-            if (i == index.getZeroBased()) {
+        for (Person p : allPersons) {
+            // Skip the person being edited
+            if (p.equals(personToEdit)) {
                 continue;
             }
-            Person p = allPersons.get(i);
+            // Check if any other person has the same name and phone
             if (p.getName().equals(editedPerson.getName())
                     && p.getPhone().equals(editedPerson.getPhone())) {
                 throw new CommandException(MESSAGE_DUPLICATE_PERSON);
@@ -132,7 +138,8 @@ public class EditCommand extends Command {
                 updated(editPersonDescriptor.getAddress(), personToEdit.getAddress()),
                 updated(editPersonDescriptor.getCompany(), personToEdit.getCompany()),
                 updated(editPersonDescriptor.getTags(), personToEdit.getTags()),
-                updated(editPersonDescriptor.getNote(), personToEdit.getNote())
+                updated(editPersonDescriptor.getNote(), personToEdit.getNote()),
+                updated(editPersonDescriptor.getPriority(), personToEdit.getPriority())
         );
     }
 
@@ -169,6 +176,7 @@ public class EditCommand extends Command {
         private Address address;
         private Company company;
         private Note note;
+        private Priority priority;
         private Set<Tag> tags;
 
         public EditPersonDescriptor() {}
@@ -184,6 +192,7 @@ public class EditCommand extends Command {
             setAddress(toCopy.address);
             setCompany(toCopy.company);
             setNote(toCopy.note);
+            setPriority(toCopy.priority);
             setTags(toCopy.tags);
         }
 
@@ -191,7 +200,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, company, note, tags);
+            return CollectionUtil.isAnyNonNull(name, phone, email, address, company, note, priority, tags);
         }
 
         public void setName(Name name) {
@@ -242,6 +251,14 @@ public class EditCommand extends Command {
             return Optional.ofNullable(note);
         }
 
+        public void setPriority(Priority priority) {
+            this.priority = priority;
+        }
+
+        public Optional<Priority> getPriority() {
+            return Optional.ofNullable(priority);
+        }
+
         /**
          * Sets {@code tags} to this object's {@code tags}.
          * A defensive copy of {@code tags} is used internally.
@@ -276,6 +293,7 @@ public class EditCommand extends Command {
                     && Objects.equals(address, otherEditPersonDescriptor.address)
                     && Objects.equals(company, otherEditPersonDescriptor.company)
                     && Objects.equals(note, otherEditPersonDescriptor.note)
+                    && Objects.equals(priority, otherEditPersonDescriptor.priority)
                     && Objects.equals(tags, otherEditPersonDescriptor.tags);
         }
 
@@ -288,6 +306,7 @@ public class EditCommand extends Command {
                     .add("address", address)
                     .add("company", company)
                     .add("note", note)
+                    .add("priority", priority)
                     .add("tags", tags)
                     .toString();
         }
