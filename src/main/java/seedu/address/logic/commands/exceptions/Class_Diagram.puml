@@ -1,0 +1,171 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+' =============================
+' Abstract Base Class
+' =============================
+abstract class Command {
+  +CommandResult execute(Model model)
+}
+
+' =============================
+' Concrete Command Classes
+' =============================
+class AddCommand {
+  -Person toAdd
+  +execute(Model model) : CommandResult
+}
+
+class ClearCommand {
+  -boolean isConfirmed
+  +execute(Model model) : CommandResult
+}
+
+class DeleteCommand {
+  -Index targetIndex
+  +execute(Model model) : CommandResult
+}
+
+class ExitCommand {
+  +execute(Model model) : CommandResult
+}
+
+class EditCommand {
+  -Index index
+  -EditPersonDescriptor editPersonDescriptor
+  +execute(Model model) : CommandResult
+}
+
+class FindCommand {
+  -NameContainsKeywordsPredicate predicate
+  +execute(Model model) : CommandResult
+}
+
+class HelpCommand {
+  +execute(Model model) : CommandResult
+}
+
+class ListCommand {
+  +execute(Model model) : CommandResult
+}
+
+class NoteCommand {
+  -Index index
+  -Note note
+  +execute(Model model) : CommandResult
+}
+
+class PriorityCommand {
+  -Index index
+  -Priority priority
+  +execute(Model model) : CommandResult
+}
+
+class SortCommand {
+  -SortKeys key
+  +execute(Model model) : CommandResult
+}
+
+class UndoCommand {
+  +execute(Model model) : CommandResult
+}
+
+' =============================
+' Nested Class in EditCommand
+' =============================
+class EditPersonDescriptor {
+  -Name name
+  -Phone phone
+  -Email email
+  -Address address
+  -Company company
+  -Note note
+  -Priority priority
+  -Set<Tag> tags
+  +isAnyFieldEdited() : boolean
+}
+
+EditCommand *-- EditPersonDescriptor : contains
+
+' =============================
+' Command Result
+' =============================
+class CommandResult {
+  -String feedbackToUser
+  -boolean showHelp
+  -boolean exit
+  +getFeedbackToUser() : String
+  +isShowHelp() : boolean
+  +isExit() : boolean
+}
+
+' =============================
+' External Dependencies
+' =============================
+class Model
+class Person
+class AddressBook
+class Index
+class NameContainsKeywordsPredicate
+class Tag
+class Priority
+class Note
+class Name
+class Phone
+class Email
+class Address
+class Company
+class SortKeys
+class Comparator
+
+' =============================
+' Inheritance Relationships
+' =============================
+Command <|-- AddCommand
+Command <|-- ClearCommand
+Command <|-- DeleteCommand
+Command <|-- ExitCommand
+Command <|-- EditCommand
+Command <|-- FindCommand
+Command <|-- HelpCommand
+Command <|-- ListCommand
+Command <|-- NoteCommand
+Command <|-- PriorityCommand
+Command <|-- SortCommand
+Command <|-- UndoCommand
+
+' =============================
+' Associations
+' =============================
+Command --> CommandResult : returns
+Command --> Model : operates on
+AddCommand --> Person : adds
+ClearCommand --> AddressBook : clears
+DeleteCommand --> Index : deletes by
+EditCommand --> Index : edits by
+FindCommand --> NameContainsKeywordsPredicate : filters by
+NoteCommand --> Index : edits by
+NoteCommand --> Note : edits
+PriorityCommand --> Index : edits by
+PriorityCommand --> Priority : edits
+ListCommand --> Person : lists
+HelpCommand --> Model : operates on
+SortCommand --> SortKeys : sorts by
+SortCommand --> Comparator : builds comparator for Person
+SortCommand --> Person : compares
+UndoCommand --> Model : undoes via model
+
+' =============================
+' Notes
+' =============================
+note top of Command
+Abstract base class that defines
+the execute(Model) method for all commands.
+end note
+
+note right of CommandResult
+Represents feedback from executing
+a command (message, help, exit flags).
+end note
+
+@enduml
