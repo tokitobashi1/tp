@@ -17,7 +17,6 @@
 
     /* Show placeholder text */
     -fx-prompt-text-fill: #aaa;  /* very light gray */
-    
     /* Smooth transition for focus effects */
     -fx-transition: all 0.2s ease-in-out;
 }
