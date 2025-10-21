@@ -18,7 +18,12 @@ import seedu.address.model.person.Person;
  * Represents the in-memory model of the address book data.
  */
 public class ModelManager implements Model {
+
+
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
+
+    private final java.util.List<AddressBook> addressBookHistory = new java.util.ArrayList<>();
+    private int historyPointer = -1;
 
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
@@ -35,10 +40,16 @@ public class ModelManager implements Model {
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        commitAddressBook();
     }
-
+    /**
+     * Initializes a ModelManager with default address book and user preferences.
+     * Also commits the initial state to the undo/redo history.
+     */
     public ModelManager() {
         this(new AddressBook(), new UserPrefs());
+        commitAddressBook();
+
     }
 
     //=========== UserPrefs ==================================================================================
@@ -77,6 +88,34 @@ public class ModelManager implements Model {
     }
 
     //=========== AddressBook ================================================================================
+    private void pushCurrentStateToHistory() {
+        while (addressBookHistory.size() > historyPointer + 1) {
+            addressBookHistory.remove(addressBookHistory.size() - 1);
+        }
+        addressBookHistory.add(new AddressBook(this.addressBook));
+        historyPointer = addressBookHistory.size() - 1;
+    }
+
+    @Override
+    public void commitAddressBook() {
+        pushCurrentStateToHistory();
+    }
+
+    @Override
+    public boolean canUndoAddressBook() {
+        return historyPointer > 0;
+    }
+
+    @Override
+    public void undoAddressBook() {
+        if (!canUndoAddressBook()) {
+            throw new IllegalStateException("No previous state to undo to");
+        }
+        historyPointer--;
+        AddressBook previous = addressBookHistory.get(historyPointer);
+        this.addressBook.resetData(previous);
+        this.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    }
 
     @Override
     public void setAddressBook(ReadOnlyAddressBook addressBook) {
