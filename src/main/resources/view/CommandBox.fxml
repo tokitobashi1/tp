@@ -10,6 +10,7 @@
         styleClass="command-box-root"
         alignment="CENTER">
 
+    <!-- The input field with placeholder -->
     <TextField
             fx:id="commandTextField"
             onAction="#handleCommandEntered"
