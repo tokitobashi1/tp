@@ -1,10 +1,13 @@
 package seedu.address.logic.commands;
 
+import static java.util.Objects.requireNonNull;
+
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 
-import static java.util.Objects.requireNonNull;
-
+/**
+ * Redoes the last address book modifying operation that was undone.
+ */
 public class RedoCommand extends Command {
 
     public static final String COMMAND_WORD = "redo";
