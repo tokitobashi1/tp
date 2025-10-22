@@ -118,6 +118,22 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public boolean canRedoAddressBook() {
+        return historyPointer < addressBookHistory.size() - 1;
+    }
+
+    @Override
+    public void redoAddressBook() {
+        if (!canRedoAddressBook()) {
+            throw new IllegalStateException("No next state to redo to");
+        }
+        historyPointer++;
+        AddressBook next = addressBookHistory.get(historyPointer);
+        this.addressBook.resetData(next);
+        this.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    }
+
+    @Override
     public void setAddressBook(ReadOnlyAddressBook addressBook) {
         this.addressBook.resetData(addressBook);
     }
