@@ -30,7 +30,15 @@ public interface Model {
      */
     void undoAddressBook();
 
+    /**
+     * Returns true if there is a next state to redo to.
+     */
+    boolean canRedoAddressBook();
 
+    /**
+     * Reverts the model's address book to the next committed state.
+     */
+    void redoAddressBook();
 
     /**
      * Replaces user prefs data with the data in {@code userPrefs}.

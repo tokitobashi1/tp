@@ -98,12 +98,20 @@ public class AddCommandTest {
             return false;
         }
 
-
         @Override
         public void undoAddressBook() {
             throw new AssertionError("This method should not be called in this test.");
         }
 
+        @Override
+        public boolean canRedoAddressBook() {
+            return false;
+        }
+
+        @Override
+        public void redoAddressBook() {
+            throw new AssertionError("This method should not be called in this test.");
+        }
 
         @Override
         public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
