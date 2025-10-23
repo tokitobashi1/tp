@@ -1,0 +1,33 @@
+/* Root StackPane */
+.command-box-root {
+    -fx-background-color: transparent;
+    -fx-padding: 12;
+}
+
+/* TextField styling */
+.command-input {
+    -fx-background-color: #f5f6f7;
+    -fx-background-radius: 8;
+    -fx-border-color: #d0d0d0;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+
+    /* Show placeholder text */
+    -fx-prompt-text-fill: #aaa;  /* very light gray */
+}
+
+/* Focused state — subtle glow and border accent */
+.command-input:focused {
+    -fx-background-color: white;
+    -fx-border-color: #0078d4; /* Accent blue */
+    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.2), 6, 0.2, 0, 1);
+}
+
+/* Hover effect — optional, soft highlight */
+.command-input:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #a0a0a0;
+}

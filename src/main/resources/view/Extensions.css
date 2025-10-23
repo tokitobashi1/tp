@@ -1,4 +1,3 @@
-
 .error {
     -fx-text-fill: #d06651 !important; /* The error class should always override the default text-fill style */
 }
@@ -17,4 +16,59 @@
 
 .tooltip-text {
     -fx-text-fill: white;
+}
+
+/* Modern thin scrollbars - added only */
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Vertical scrollbar track */
+.scroll-bar:vertical .track {
+    -fx-background-color: #2b2b3f;
+    -fx-background-insets: 0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* Vertical scrollbar thumb */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(93,173,226,0.5);
+    -fx-background-insets: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* Vertical thumb hover effect */
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(93,173,226,0.8);
+}
+
+/* Horizontal scrollbar track */
+.scroll-bar:horizontal .track {
+    -fx-background-color: #2b2b3f;
+    -fx-background-insets: 0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* Horizontal scrollbar thumb */
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(93,173,226,0.5);
+    -fx-background-insets: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* Horizontal thumb hover effect */
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: rgba(93,173,226,0.8);
+}
+
+/* Thin scrollbar dimensions */
+.scroll-bar {
+    -fx-pref-width: 8px;
+    -fx-pref-height: 8px;
+    -fx-background-insets: 0;
 }
