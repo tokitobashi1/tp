@@ -27,6 +27,7 @@ public class SortCommand extends Command {
         requireNonNull(model);
         Comparator<Person> cmp = comparatorFor(key);
         model.sortPersonList(cmp);
+        model.commitAddressBook();
         String message = String.format(MESSAGE_SUCCESS, key.getDisplayName());
         return new CommandResult(message);
     }

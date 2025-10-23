@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
@@ -45,6 +46,7 @@ public class SortCommandTest {
 
         String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.NAME.getDisplayName());
         assertEquals(successMessage, result.getFeedbackToUser());
+        assertTrue(model.canUndoAddressBook());
 
         List<Person> after = new ArrayList<>(model.getFilteredPersonList());
         List<Person> expected = new ArrayList<>(before);
@@ -65,6 +67,7 @@ public class SortCommandTest {
 
         String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.PHONE.getDisplayName());
         assertEquals(successMessage, result.getFeedbackToUser());
+        assertTrue(model.canUndoAddressBook());
 
         List<Person> after = new ArrayList<>(model.getFilteredPersonList());
         List<Person> expected = new ArrayList<>(before);
@@ -85,6 +88,7 @@ public class SortCommandTest {
 
         String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.EMAIL.getDisplayName());
         assertEquals(successMessage, result.getFeedbackToUser());
+        assertTrue(model.canUndoAddressBook());
 
         List<Person> after = new ArrayList<>(model.getFilteredPersonList());
         List<Person> expected = new ArrayList<>(before);
@@ -105,6 +109,7 @@ public class SortCommandTest {
 
         String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.ADDRESS.getDisplayName());
         assertEquals(successMessage, result.getFeedbackToUser());
+        assertTrue(model.canUndoAddressBook());
 
         List<Person> after = new ArrayList<>(model.getFilteredPersonList());
         List<Person> expected = new ArrayList<>(before);
@@ -125,6 +130,7 @@ public class SortCommandTest {
 
         String successMessage = String.format(SortCommand.MESSAGE_SUCCESS, SortKeys.TAG.getDisplayName());
         assertEquals(successMessage, result.getFeedbackToUser());
+        assertTrue(model.canUndoAddressBook());
 
         List<Person> after = new ArrayList<>(model.getFilteredPersonList());
         List<Person> expected = new ArrayList<>(before);
