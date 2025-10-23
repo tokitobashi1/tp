@@ -24,7 +24,7 @@ public class RedoCommand extends Command {
 
         try {
             model.redoAddressBook();
-        } catch (RuntimeException re) {
+        } catch (IllegalStateException re) {
             throw new CommandException(MESSAGE_FAILURE);
         }
 
