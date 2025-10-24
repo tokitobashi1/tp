@@ -28,8 +28,8 @@ class Messages
 ' =============================
 Command <|-- NoteCommand
 
-' Composition — NoteCommand owns Note
-NoteCommand *-- Note : owns
+' Association — NoteCommand uses Note
+NoteCommand --> Note : uses
 
 ' Association — NoteCommand references Index (value object/reference)
 NoteCommand --> Index : references
