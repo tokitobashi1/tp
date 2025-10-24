@@ -315,28 +315,17 @@
 #commandTypeLabel {
     -fx-font-size: 11px;
     -fx-text-fill: #F70D1A;
-    -fx-font-weight: bold;
-    -fx-padding: 0 6 0 0;
-    -fx-opacity: 0.9;
 }
 
 #commandTextField {
-    -fx-background-color: rgba(56, 56, 56, 0.9); /* semi-transparent modern background */
+    -fx-background-color: transparent #383838 transparent #383838;
     -fx-background-insets: 0;
-    -fx-border-color: rgba(255, 255, 255, 0.2); /* subtle border */
+    -fx-border-color: #383838 #383838 #ffffff #383838;
+    -fx-border-insets: 0;
     -fx-border-width: 1;
-    -fx-border-radius: 6; /* rounded corners */
-    -fx-background-radius: 6;
     -fx-font-family: "Segoe UI Light";
     -fx-font-size: 13pt;
     -fx-text-fill: white;
-    -fx-padding: 6 10; /* inner padding */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1); /* subtle shadow */
-}
-
-#commandTextField:focused {
-    -fx-border-color: #3e7b91; /* accent color on focus */
-    -fx-effect: dropshadow(gaussian, rgba(62,123,145,0.5), 4, 0, 0, 2);
 }
 
 #filterField, #personListPanel, #personWebpage {
