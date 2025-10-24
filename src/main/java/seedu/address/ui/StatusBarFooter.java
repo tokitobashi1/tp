@@ -9,6 +9,7 @@ import javafx.scene.layout.Region;
 
 /**
  * A UI for the status bar that is displayed at the footer of the application.
+ * Displays the save file location statically.
  */
 public class StatusBarFooter extends UiPart<Region> {
 
@@ -22,23 +23,10 @@ public class StatusBarFooter extends UiPart<Region> {
 
     /**
      * Creates a {@code StatusBarFooter} with the given {@code Path}.
+     * Sets the text statically; no dynamic updates.
      */
     public StatusBarFooter(Path saveLocation) {
         super(FXML);
-        setSaveLocation(saveLocation);
-    }
-
-    /**
-     * Sets or updates the save file location text.
-     */
-    public void setSaveLocation(Path newSaveLocation) {
-        saveLocationStatus.setText("Save file location: " + Paths.get(".").resolve(newSaveLocation).toString());
-    }
-
-    /**
-     * Optionally set a custom message on the footer.
-     */
-    public void setCustomMessage(String message) {
-        saveLocationStatus.setText(message);
+        saveLocationStatus.setText("Save file location: " + Paths.get(".").resolve(saveLocation).toString());
     }
 }
