@@ -11,7 +11,7 @@ participant ":CommandResult" as CommandResult
 NoteCommand -> Model : getFilteredPersonList()
 activate Model
 Model -> LastShownList : produce filtered list
-Model -->> NoteCommand : lastShownList
+Model --> NoteCommand : lastShownList
 deactivate Model
 
 NoteCommand -> LastShownList : get(index)
@@ -20,29 +20,29 @@ NoteCommand -> LastShownList : get(index)
 create EditedPerson
 NoteCommand -> EditedPerson : new Person(name, phone, email, address, company, tags, note)
 activate EditedPerson
-EditedPerson --> NoteCommand 
+EditedPerson --> NoteCommand
 deactivate EditedPerson
 
 NoteCommand -> Model : setPerson(personToEdit, editedPerson)
 activate Model
-Model -->> NoteCommand
+Model --> NoteCommand
 deactivate Model
 
 NoteCommand -> Model : commitAddressBook()
 activate Model
-Model -->> NoteCommand 
+Model --> NoteCommand
 deactivate Model
 
 NoteCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
 activate Model
-Model -->> NoteCommand 
+Model --> NoteCommand
 deactivate Model
 
 ' CommandResult: create first to reserve top placement, then constructor and activation attached to class box
 create CommandResult
 NoteCommand -> CommandResult : new CommandResult(generateSuccessMessage(note, editedPerson))
 activate CommandResult
-CommandResult -->> NoteCommand : result
+CommandResult --> NoteCommand : result
 deactivate CommandResult
 
 @enduml
