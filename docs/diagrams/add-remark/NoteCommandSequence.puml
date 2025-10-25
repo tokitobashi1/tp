@@ -1,98 +1,48 @@
-@startuml NoteSequenceDiagram
+@startuml NoteCommandInternalSequence
+hide footbox
+skinparam ArrowFontStyle plain
 
-!pragma teoz true
-
-actor User
-participant ":UI" as UI
-participant ":LogicManager" as LogicManager
-participant ":AddressBookParser" as AddressBookParser
-participant ":NoteCommandParser" as NoteCommandParser
-participant "note:NoteCommand" as NoteCommand
+participant ":NoteCommand" as NoteCommand
 participant ":Model" as Model
-participant "personToEdit:Person" as PersonToEdit
-participant "editedPerson:Person" as EditedPerson
-
-User -> UI : note 1 r/Some remark
-activate UI
-
-UI -> LogicManager : execute("note 1 r/Some remark")
-activate LogicManager
-
-LogicManager -> AddressBookParser : parseCommand("note 1 r/Some remark")
-activate AddressBookParser
-
-AddressBookParser -> NoteCommandParser : parse("1 r/Some remark")
-activate NoteCommandParser
-
-NoteCommandParser -> NoteCommandParser : parse arguments
-
-create NoteCommand
-NoteCommandParser -> NoteCommand : new NoteCommand(index, note)
-activate NoteCommand
-NoteCommand --> NoteCommandParser
-deactivate NoteCommand
-
-NoteCommandParser --> AddressBookParser : note
-deactivate NoteCommandParser
-
-AddressBookParser --> LogicManager : note
-deactivate AddressBookParser
-
-LogicManager -> NoteCommand : execute(model)
-activate NoteCommand
+participant ":List<Person>" as LastShownList
+participant ":Person" as EditedPerson
+participant ":CommandResult" as CommandResult
 
 NoteCommand -> Model : getFilteredPersonList()
 activate Model
-Model --> NoteCommand : personList
+Model -> LastShownList : produce filtered list
+Model -->> NoteCommand : lastShownList
 deactivate Model
 
-NoteCommand -> NoteCommand : get person at index
+NoteCommand -> LastShownList : get(index)
 
-ref over NoteCommand, PersonToEdit, EditedPerson : Create Edited Person
-
-create PersonToEdit
-NoteCommand -> PersonToEdit : get personToEdit from list
-activate PersonToEdit
-
-NoteCommand -> NoteCommand : createEditedPerson(personToEdit)
-
+' Ensure EditedPerson lifeline exists at top, then send constructor and activate immediately
 create EditedPerson
 NoteCommand -> EditedPerson : new Person(name, phone, email, address, company, tags, note)
 activate EditedPerson
-EditedPerson --> NoteCommand
+EditedPerson --> NoteCommand 
 deactivate EditedPerson
-
-PersonToEdit --> NoteCommand
-deactivate PersonToEdit
 
 NoteCommand -> Model : setPerson(personToEdit, editedPerson)
 activate Model
-Model --> NoteCommand
+Model -->> NoteCommand
 deactivate Model
 
 NoteCommand -> Model : commitAddressBook()
 activate Model
-Model --> NoteCommand
+Model -->> NoteCommand 
 deactivate Model
 
 NoteCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
 activate Model
-Model --> NoteCommand
+Model -->> NoteCommand 
 deactivate Model
 
-create ":CommandResult" as CommandResult
-NoteCommand -> CommandResult : new CommandResult(MESSAGE_SUCCESS)
+' CommandResult: create first to reserve top placement, then constructor and activation attached to class box
+create CommandResult
+NoteCommand -> CommandResult : new CommandResult(generateSuccessMessage(note, editedPerson))
 activate CommandResult
-CommandResult --> NoteCommand : result
+CommandResult -->> NoteCommand : result
 deactivate CommandResult
-
-NoteCommand --> LogicManager : result
-deactivate NoteCommand
-
-LogicManager --> UI : result
-deactivate LogicManager
-
-UI --> User : Display success message
-deactivate UI
 
 @enduml
