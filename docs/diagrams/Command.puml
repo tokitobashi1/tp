@@ -25,6 +25,7 @@ package seedu.address.logic.commands {
   class PriorityCommand
   class SortCommand
   class UndoCommand
+  class RedoCommand  ' <-- added
 
   ' =============================
   ' CommandResult
@@ -61,6 +62,7 @@ package seedu.address.logic.commands {
   Command <|-- PriorityCommand
   Command <|-- SortCommand
   Command <|-- UndoCommand
+  Command <|-- RedoCommand  ' <-- added
 
   ' =============================
   ' Associations

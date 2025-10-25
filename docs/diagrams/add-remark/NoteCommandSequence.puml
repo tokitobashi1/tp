@@ -1,0 +1,98 @@
+@startuml NoteSequenceDiagram
+
+!pragma teoz true
+
+actor User
+participant ":UI" as UI
+participant ":LogicManager" as LogicManager
+participant ":AddressBookParser" as AddressBookParser
+participant ":NoteCommandParser" as NoteCommandParser
+participant "note:NoteCommand" as NoteCommand
+participant ":Model" as Model
+participant "personToEdit:Person" as PersonToEdit
+participant "editedPerson:Person" as EditedPerson
+
+User -> UI : note 1 r/Some remark
+activate UI
+
+UI -> LogicManager : execute("note 1 r/Some remark")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("note 1 r/Some remark")
+activate AddressBookParser
+
+AddressBookParser -> NoteCommandParser : parse("1 r/Some remark")
+activate NoteCommandParser
+
+NoteCommandParser -> NoteCommandParser : parse arguments
+
+create NoteCommand
+NoteCommandParser -> NoteCommand : new NoteCommand(index, note)
+activate NoteCommand
+NoteCommand --> NoteCommandParser
+deactivate NoteCommand
+
+NoteCommandParser --> AddressBookParser : note
+deactivate NoteCommandParser
+
+AddressBookParser --> LogicManager : note
+deactivate AddressBookParser
+
+LogicManager -> NoteCommand : execute(model)
+activate NoteCommand
+
+NoteCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> NoteCommand : personList
+deactivate Model
+
+NoteCommand -> NoteCommand : get person at index
+
+ref over NoteCommand, PersonToEdit, EditedPerson : Create Edited Person
+
+create PersonToEdit
+NoteCommand -> PersonToEdit : get personToEdit from list
+activate PersonToEdit
+
+NoteCommand -> NoteCommand : createEditedPerson(personToEdit)
+
+create EditedPerson
+NoteCommand -> EditedPerson : new Person(name, phone, email, address, company, tags, note)
+activate EditedPerson
+EditedPerson --> NoteCommand
+deactivate EditedPerson
+
+PersonToEdit --> NoteCommand
+deactivate PersonToEdit
+
+NoteCommand -> Model : setPerson(personToEdit, editedPerson)
+activate Model
+Model --> NoteCommand
+deactivate Model
+
+NoteCommand -> Model : commitAddressBook()
+activate Model
+Model --> NoteCommand
+deactivate Model
+
+NoteCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+activate Model
+Model --> NoteCommand
+deactivate Model
+
+create ":CommandResult" as CommandResult
+NoteCommand -> CommandResult : new CommandResult(MESSAGE_SUCCESS)
+activate CommandResult
+CommandResult --> NoteCommand : result
+deactivate CommandResult
+
+NoteCommand --> LogicManager : result
+deactivate NoteCommand
+
+LogicManager --> UI : result
+deactivate LogicManager
+
+UI --> User : Display success message
+deactivate UI
+
+@enduml
