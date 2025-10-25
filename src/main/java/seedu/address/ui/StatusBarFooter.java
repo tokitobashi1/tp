@@ -18,9 +18,6 @@ public class StatusBarFooter extends UiPart<Region> {
     @FXML
     private Label saveLocationStatus;
 
-    @FXML
-    private Label copyrightLabel;
-
     /**
      * Creates a {@code StatusBarFooter} with the given {@code Path}.
      * Sets the text statically; no dynamic updates.
