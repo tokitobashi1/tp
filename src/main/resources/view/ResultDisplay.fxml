@@ -7,7 +7,7 @@
            styleClass="pane-with-border"
            xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
-           stylesheets="@ResultDisplay.css">  <!-- 🎨 Link your CSS file here -->
+           stylesheets="@ResultDisplay.css">  
   <TextArea fx:id="resultDisplay"
             editable="false"
             styleClass="result-display"/>
