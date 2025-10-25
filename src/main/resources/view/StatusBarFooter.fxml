@@ -12,7 +12,7 @@
       alignment="CENTER"
       spacing="4"
       minHeight="50"
-      stylesheets="@StatusBar.css">
+      stylesheets="@StatusBarFooter.css">
 
     <!-- Save file location (uppercase for a sleek status look) -->
     <StackPane fx:id="saveContainer">
